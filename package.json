@@ -5,7 +5,7 @@
   "scripts": {
     "start": "npm run stop && concurrently \"npm run server\" \"npm run expose\"",
     "build": "react-scripts build",
-    "expose": "ngrok http 8301",
+    "expose": "lt --port 8301",
     "server": "react-scripts start",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -38,6 +38,6 @@
   "devDependencies": {
     "concurrently": "^5.2.0",
     "cross-port-killer": "^1.2.1",
-    "ngrok": "^3.2.7"
+    "ngrok": "^3.3.0"
   }
 }
