@@ -25,22 +25,26 @@ class ItemsDao {
         }
       }`).then(res => {
         const boards = res.data.boards.filter(board => this.includeBoard(board));
-        let groupsIds = []
+        const boardsIds = boards.map(board => parseInt(board.id, 10));
+
+        let groupsIds = [];
+
         boards.forEach(board => {
           groupsIds = groupsIds.concat(board.groups.map(group => group.id))
         });
 
-        this.loadItems(groupsIds)
+        this.loadItems(boardsIds, groupsIds)
           .then(items => resolve(items))
           .catch(error => reject(error));
       });
     });
   }
 
-  loadItems(groupsIds) {
+  loadItems(boardsIds, groupsIds) {
     return new Promise((resolve, reject) => {
-      this.monday.api(`query($groupsIds: [String]) {
-          boards {
+      this.monday.api(`query($groupsIds: [String], $boardsIds: [Int]) {
+          boards(ids: $boardsIds) {
+            name
             groups(ids: $groupsIds) {
               title
               color
@@ -49,14 +53,14 @@ class ItemsDao {
               }
           }
         }
-      }`, { variables: {groupsIds} })
+      }`, { variables: {groupsIds, boardsIds} })
       .then(res => resolve(this.parseItems(res.data)))
       .catch(error => reject(error))
     });
   }
 
   parseItems(items) {
-    console.log("Items: ", items);
+    return items;
   }
 
   includeBoard(board) {

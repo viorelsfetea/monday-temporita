@@ -1,8 +1,14 @@
 import React from "react";
-import "./App.css";
 import mondaySdk from "monday-sdk-js";
+
 import ItemsDao from "./data/ItemsDao";
 import Utils from "./libs/Utils";
+import BoardList from "./partials/BoardList";
+
+import "./App.css";
+import "./assets/fontawesome/css/all.min.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import "monday-ui-react-core/dist/main.css"
 
 const monday = mondaySdk();
 
@@ -26,7 +32,9 @@ class App extends React.Component {
       this.setState({ settings: res.data });
 
       this.itemsDao.getItems()
-        .then(items => console.log(items))
+        .then(items => {
+          this.setState({items});
+        })
         .catch(error => {
           Utils.logError(error);
 
@@ -44,8 +52,15 @@ class App extends React.Component {
   }
 
   render() {
-    return <div className="App" style={{background: (this.state.settings.background), color: '#FFF'}}>
-        Hello, monday Apps!
+    return <div className="App container-fluid" style={{background: (this.state.settings.background)}}>
+        <div className="row">
+          <div className="col-3">
+            <BoardList boards={this.state.items ? this.state.items.boards : null} key={this.state.items ? this.state.items.boards : 0}/>
+          </div>
+          <div className="col-9">
+            The rest of the app
+          </div>
+        </div>
       </div>;
   }
 }
