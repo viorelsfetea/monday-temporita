@@ -38,22 +38,26 @@ class BoardList extends React.Component {
         groupFiltered.items = group.items.filter(item => {
           return item.name.toLocaleLowerCase().includes(this.searchValue.toLocaleLowerCase());
         });
-        boardFiltered.groups.push(groupFiltered);
+
+        if(groupFiltered.items.length > 0) {
+          boardFiltered.groups.push(groupFiltered);
+        }
       })
-      boards.push(boardFiltered);
+
+      if(boardFiltered.groups.length > 0) {
+        boards.push(boardFiltered);
+      }
     })
 
     this.setState({boards});
   }
 
   searchChanged(value) {
-    console.log("Search:", value);
     this.searchValue = value;
     this.parseBoards();
   }
 
   searchCleared() {
-    console.log("Search cleared");
     this.searchValue = "";
     this.parseBoards();
   }
@@ -74,7 +78,7 @@ class BoardList extends React.Component {
           size={Search.sizes.SMALL}
         />
       </div>
-        {this.state.boards ? this.state.boards.map((board, index) => <Board key={index} board={board} />) : ""}
+        {this.state.boards ? this.state.boards.map((board, index) => <Board key={index} board={board} monday={this.props.monday} itemHandler={this.props.itemHandler} />) : ""}
       </div>;
   }
 }

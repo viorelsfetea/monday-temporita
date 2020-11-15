@@ -20,6 +20,7 @@ body {
 .Item {
   align-items: center;
   background: rgb(245, 246, 248);
+  cursor: pointer;
   display: flex;
   height: 30px;
   line-height: 30px;

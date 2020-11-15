@@ -49,6 +49,7 @@ class ItemsDao {
               title
               color
               items {
+                id
                 name
               }
           }
