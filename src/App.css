@@ -12,6 +12,15 @@ body {
   font-weight: 600;
 }
 
+.Boards {
+  height: 90vh;
+  overflow-y: auto;
+}
+
+.Board:first-child {
+  margin-top: 0 !important;
+}
+
 .Group h4 {
   font-size: 18px;
   font-weight: 300;
@@ -44,4 +53,8 @@ body {
   font-weight: 400;
   line-height: inherit;
   margin: 0 0 0 15px;
+}
+
+.TemporitaCalendar {
+  height: 95vh;
 }

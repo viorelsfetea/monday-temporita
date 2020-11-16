@@ -1,6 +1,9 @@
 import React from 'react'
 import { Calendar, Views } from 'react-big-calendar'
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
+import Modal from 'react-modal';
+
+import BoardList from "../partials/BoardList";
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.scss'
@@ -14,10 +17,15 @@ class TemporitaCalendar extends React.Component {
     this.state = {
       events: this.props.itemHandler.getEvents(),
       displayDragItemInCell: true,
+      modalIsOpen: false
     }
 
     this.moveEvent = this.moveEvent.bind(this)
     this.newEvent = this.newEvent.bind(this)
+
+    this.selectedTimes = {
+      start: null, end: null
+    }
   }
 
   handleDragStart = event => {
@@ -42,6 +50,12 @@ class TemporitaCalendar extends React.Component {
 
     this.setState({ draggedEvent: null })
     this.newEvent(event);
+  }
+
+  handleSelect({ start, end }) {
+    this.setState({modalIsOpen: true});
+    this.selectedTimes.start = start;
+    this.selectedTimes.end = end;
   }
 
   moveEvent = ({ event, start, end, isAllDay: droppedOnAllDaySlot }) => {
@@ -80,6 +94,18 @@ class TemporitaCalendar extends React.Component {
     //alert(`${event.title} was resized to ${start}-${end}`)
   }
 
+  itemToEvent(item) {
+    this.newEvent({
+      id: item.id,
+      title: item.name,
+      start: this.selectedTimes.start,
+      end: this.selectedTimes.end,
+      color: item.color
+    });
+
+    this.setState({modalIsOpen: false});
+  }
+
   newEvent = event => {
     let idList = this.state.events.length > 0 ? this.state.events.map(a => a.id) : [0]
     let newId = Math.max(...idList) + 1
@@ -100,8 +126,8 @@ class TemporitaCalendar extends React.Component {
   getMinMaxTimes() {
     const minTime = new Date();
     const maxTime = new Date();
-    minTime.setHours(9);
-    maxTime.setHours(18);
+    minTime.setHours(this.props.settings.dayStart ? this.props.settings.dayStart : 9);
+    maxTime.setHours(this.props.settings.dayEnd ? this.props.settings.dayEnd : 18);
     minTime.setMinutes(0);
     maxTime.setMinutes(0);
 
@@ -119,8 +145,35 @@ class TemporitaCalendar extends React.Component {
 
   render() {
     const {min, max} = this.getMinMaxTimes();
+    let calendarViews = this.props.settings.weekends ? {week: true, day: true } : {work_week: true, day: true };
 
     return (
+      <div className="TemporitaCalendar">
+
+        <Modal
+          isOpen={this.state.modalIsOpen}
+          onRequestClose={false}
+          style={{
+          content : {
+              top                   : '50%',
+              left                  : '50%',
+              right                 : 'auto',
+              bottom                : 'auto',
+              marginRight           : '-50%',
+              height                : '50vh',
+              width                 : '40%',
+              transform             : 'translate(-50%, -50%)'
+            }
+          }}
+          contentLabel="Example Modal"
+        >
+            <BoardList 
+              monday={this.props.monday}
+              itemHandler={this.itemHandler}
+              boards={this.props.boards} 
+              onItemClick={this.itemToEvent.bind(this)}
+            />
+       </Modal>
       <DragAndDropCalendar
         formats={{
           timeGutterFormat: "HH:mm"
@@ -130,7 +183,6 @@ class TemporitaCalendar extends React.Component {
         onEventDrop={this.moveEvent}
         resizable
         onEventResize={this.resizeEvent}
-        onSelectSlot={this.newEvent}
         // Fix (the next 2 props): when calendar initialized with no events, users can't resize events first on the first try
         // https://github.com/jquense/react-big-calendar/issues/1105
         eventPropGetter={event => {
@@ -144,9 +196,9 @@ class TemporitaCalendar extends React.Component {
           { start: new Date(), end: new Date(), title: "", hide: true },
             ...this.state.events
         ]}
-        step={15}
-        timeslots={4}
-        views={{week: true, day: true }}
+        step={10}
+        timeslots={6}
+        views={calendarViews}
         defaultView={Views.DAY}
         defaultDate={new Date()}
         min={min}
@@ -157,10 +209,12 @@ class TemporitaCalendar extends React.Component {
         }
         onDropFromOutside={this.onDropFromOutside}
         handleDragStart={this.handleDragStart}
+        onSelectSlot={this.handleSelect.bind(this)}
         components={{
           event: this.eventRender
         }}
       />
+      </div>
     )
   }
 }

@@ -37,8 +37,12 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    monday.storage.instance.getItem('mykey').then(res => {
+      console.log(res.data.value);
+    });
+
     monday.listen("settings", res => {
-      this.setState({ settings: res.data });
+      this.setState({ settings: res.data, settingsHash: Utils.hashObject(res.data) });
 
       this.itemsDao.getItems()
         .then(items => {
@@ -60,14 +64,35 @@ class App extends React.Component {
     });
   }
 
+  openItem(item) {
+    monday.execute('openItemCard', { itemId: item.id, kind: "updates" });
+  }
+
   render() {
+    const boards = this.state.items ? this.state.items.boards : null;
+    const boardsKey = this.state.items ? Utils.hashObject(this.state.items.boards) : 0; // consider just reading the length instead of hashing
+
     return <div className="App container-fluid" style={{background: (this.state.settings.background)}}>
         <div className="row">
           <div className="col-3">
-            <BoardList monday={monday} itemHandler={this.itemHandler} boards={this.state.items ? this.state.items.boards : null} key={this.state.items ? this.state.items.boards : 0}/>
+            <BoardList 
+              monday={monday}
+              itemHandler={this.itemHandler}
+              boards={boards} 
+              draggable={true}
+              key={boardsKey}
+              onItemClick={this.openItem}
+            />
           </div>
+
           <div className="col-9 pt-4">
-            <TemporitaCalendar localizer={localizer} itemHandler={this.itemHandler} />
+            <TemporitaCalendar 
+              monday={monday}
+              boards={boards}
+              localizer={localizer}
+              itemHandler={this.itemHandler}
+              settings={this.state.settings}
+            />
           </div>
         </div>
       </div>;

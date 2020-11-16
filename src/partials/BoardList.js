@@ -64,21 +64,23 @@ class BoardList extends React.Component {
 
   render() {
     return <div className="BoardsList mt-4">
-      <div className="mb-4">
-        <Search
-          debounceRate={0}
-          iconName="fa-search"
-          secondaryIconName="fa-times"
-          id="Knobs"
-          clearOnIconClick={true}
-          inputAriaLabel="Filter your items"
-          placeholder="Filter your items"
-          onChange={this.searchChanged.bind(this)}
-          value=""
-          size={Search.sizes.SMALL}
-        />
-      </div>
-        {this.state.boards ? this.state.boards.map((board, index) => <Board key={index} board={board} monday={this.props.monday} itemHandler={this.props.itemHandler} />) : ""}
+        <div className="mb-4">
+          <Search
+            debounceRate={0}
+            iconName="fa-search"
+            secondaryIconName="fa-times"
+            id="Knobs"
+            clearOnIconClick={true}
+            inputAriaLabel="Filter your items"
+            placeholder="Filter your items"
+            onChange={this.searchChanged.bind(this)}
+            value=""
+            size={Search.sizes.SMALL}
+          />
+        </div>
+        <div className="Boards pr-2">
+          {this.state.boards ? this.state.boards.map((board, index) => <Board key={index} board={board} onItemClick={this.props.onItemClick} {...this.props} />) : ""}
+        </div>
       </div>;
   }
 }
