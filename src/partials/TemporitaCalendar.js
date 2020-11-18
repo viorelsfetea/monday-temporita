@@ -15,13 +15,18 @@ class TemporitaCalendar extends React.Component {
   constructor(props) {
     super(props)
 
+    this.eventsDao = new EventsDao(this.props.monday, this.props.utils);
+
     this.state = {
-      events: this.props.itemHandler.getEvents(),
+      events: [],
       displayDragItemInCell: true,
       modalIsOpen: false
     }
 
-    this.eventsDao = new EventsDao(this.props.monday, this.props.utils);
+    this.eventsDao.getCurrentEvents(this.props.currentUser, new Date(), this.props.settings.weekends)
+      .then(events => {
+        this.setState({events})
+      })
 
     this.moveEvent = this.moveEvent.bind(this)
     this.newEvent = this.newEvent.bind(this)
@@ -62,30 +67,24 @@ class TemporitaCalendar extends React.Component {
   }
 
   moveEvent = ({ event, start, end, isAllDay: droppedOnAllDaySlot }) => {
-    const { events } = this.state
-    
     event.allDay = droppedOnAllDaySlot;
 
-    const nextEvents = events.map(existingEvent => {
-      return existingEvent.id === event.id
-        ? { ...existingEvent, start, end }
-        : existingEvent
-    })
-
-    this.props.itemHandler.addEvent(event);
-
-    this.setState({
-      events: nextEvents,
-    })
+    this.resizeEvent({event, start, end});
   }
 
   resizeEvent = ({ event, start, end }) => {
     const { events } = this.state
 
     const nextEvents = events.map(existingEvent => {
-      return existingEvent.id === event.id
-        ? { ...existingEvent, start, end }
-        : existingEvent
+      if(existingEvent.id === event.id) {
+        existingEvent.start = start;
+        existingEvent.end = end;
+        existingEvent.allDay = event.allDay;
+
+        this.eventsDao.update(this.props.currentUser, existingEvent);
+      }
+
+      return existingEvent;
     })
 
     this.setState({
@@ -107,28 +106,29 @@ class TemporitaCalendar extends React.Component {
 
   newEvent = event => {
     let hour = {
-      id: event.id,
+      id: parseInt(`${event.id}${Math.ceil(Math.random() * 10000)}`), // Makes the event ids unique so multiple tasks can be added in the same day
+      monday_id: event.id,
       title: event.title,
       allDay: event.allDay,
       start: event.start,
       end: event.end,
       color: event.color
     }
-
+    
     this.setState({
       events: this.state.events.concat([hour]),
     });
 
-    this.eventsDao.save(event); 
+    this.eventsDao.save(this.props.currentUser, hour); 
   }
 
   getMinMaxTimes() {
     const minTime = new Date();
     const maxTime = new Date();
     minTime.setHours(this.props.settings.dayStart ? this.props.settings.dayStart : 9);
-    maxTime.setHours(this.props.settings.dayEnd ? this.props.settings.dayEnd : 18);
+    maxTime.setHours(this.props.settings.dayEnd ? this.props.settings.dayEnd - 1 : 18); // if 16, make it 15:59
     minTime.setMinutes(0);
-    maxTime.setMinutes(0);
+    maxTime.setMinutes(59);
 
     return {min: minTime, max: maxTime};
   }

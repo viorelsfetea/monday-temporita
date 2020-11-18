@@ -40,10 +40,7 @@ class App extends React.Component {
     this.itemHandler = new ItemHandler();
   }
 
-  componentDidMount() {
-    monday.listen("settings", res => {
-      this.setState({ settings: res.data, settingsHash: Utils.hashObject(res.data) });
-
+  loadApplication() {
       Promise.all([this.itemsDao.getItems(), this.usersDao.getCurrentUser()])
         .then(results => {
           this.setState({
@@ -55,6 +52,13 @@ class App extends React.Component {
         .catch(error => {
           this.utils.showError(error.message)
         });
+  }
+
+  componentDidMount() {
+    monday.listen("settings", res => {
+      this.setState({ settings: res.data, settingsHash: Utils.hashObject(res.data) });
+
+      this.loadApplication();
     });
     
     monday.listen("context", res => {
@@ -85,6 +89,7 @@ class App extends React.Component {
 
           <div className="col-9 pt-4">
             <TemporitaCalendar 
+              currentUser={this.state.currentUser}
               monday={monday}
               utils={this.utils}
               boards={boards}
