@@ -7,7 +7,7 @@ class ItemsDao {
     return new Promise((resolve, reject) => {
       this.loadGroups()
         .then(result => resolve(result))
-        .catch(error => reject(error))
+        .catch(() => reject(new Error("Couldn't retrieve your boards. Please refresh this page.")))
     });
   }
 

@@ -1,5 +1,6 @@
 class ItemHandler {
-  constructor() {
+  constructor(monday) {
+    this.monday = monday;
     this.draggedItem = null;
     this.events = [];
   }
@@ -10,6 +11,10 @@ class ItemHandler {
 
   getDraggedItem() {
     return this.draggedItem;
+  }
+
+  openItem(item) {
+    this.monday.execute('openItemCard', { itemId: item.id, kind: "updates" });
   }
 
   addEvent(event) {

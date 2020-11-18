@@ -1,6 +1,20 @@
 class Utils {
-    static logError(error) {
-        console.error("Temporita: ", error);
+    constructor(monday) {
+      this.monday = monday;
+    } 
+
+    showError(message) {
+      this.monday.execute("notice", { 
+        message: message,
+        type: "error",
+        timeout: 10000,
+      });
+
+      this.logError(message);
+    }
+
+    logError(error) {
+      console.error("Temporita: ", error);
     }
 
     static hashObject(object) {

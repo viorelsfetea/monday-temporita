@@ -4,6 +4,7 @@ import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
 import Modal from 'react-modal';
 
 import BoardList from "../partials/BoardList";
+import EventsDao from "../data/EventsDao";
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.scss'
@@ -19,6 +20,8 @@ class TemporitaCalendar extends React.Component {
       displayDragItemInCell: true,
       modalIsOpen: false
     }
+
+    this.eventsDao = new EventsDao(this.props.monday, this.props.utils);
 
     this.moveEvent = this.moveEvent.bind(this)
     this.newEvent = this.newEvent.bind(this)
@@ -74,8 +77,6 @@ class TemporitaCalendar extends React.Component {
     this.setState({
       events: nextEvents,
     })
-
-    // alert(`${event.title} was dropped onto ${updatedEvent.start}`)
   }
 
   resizeEvent = ({ event, start, end }) => {
@@ -90,8 +91,6 @@ class TemporitaCalendar extends React.Component {
     this.setState({
       events: nextEvents,
     })
-
-    //alert(`${event.title} was resized to ${start}-${end}`)
   }
 
   itemToEvent(item) {
@@ -107,10 +106,8 @@ class TemporitaCalendar extends React.Component {
   }
 
   newEvent = event => {
-    let idList = this.state.events.length > 0 ? this.state.events.map(a => a.id) : [0]
-    let newId = Math.max(...idList) + 1
     let hour = {
-      id: newId,
+      id: event.id,
       title: event.title,
       allDay: event.allDay,
       start: event.start,
@@ -120,7 +117,9 @@ class TemporitaCalendar extends React.Component {
 
     this.setState({
       events: this.state.events.concat([hour]),
-    })
+    });
+
+    this.eventsDao.save(event); 
   }
 
   getMinMaxTimes() {
@@ -189,8 +188,6 @@ class TemporitaCalendar extends React.Component {
           if (event.hide) {
             return { style: { display: "none" } };
           }
-
-          return {style: {background: event.color}}
         }}
         events={[
           { start: new Date(), end: new Date(), title: "", hide: true },

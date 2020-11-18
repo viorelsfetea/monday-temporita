@@ -58,3 +58,24 @@ body {
 .TemporitaCalendar {
   height: 95vh;
 }
+
+.Preloader {
+  align-items: center;
+  background: #FFF;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  position: absolute;
+  width: 100%;
+  z-index: 999;
+}
+
+.Preloader .spinner {
+  height: 64px;
+  position: absolute;
+  width: 64px;
+}
+
+.Preloader .spinner svg {
+  color: #0085FF;
+}
