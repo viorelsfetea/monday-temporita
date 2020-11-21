@@ -6,6 +6,8 @@ import Modal from 'react-modal';
 import BoardList from "../partials/BoardList";
 import EventsDao from "../data/EventsDao";
 
+import TemporitaCalendarEvent from "../partials/calendar/TemporitaCalendarEvent";
+
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.scss'
 
@@ -25,6 +27,7 @@ class TemporitaCalendar extends React.Component {
 
     this.eventsDao.getCurrentEvents(this.props.currentUser, new Date(), this.props.settings.weekends)
       .then(events => {
+        console.log(events);
         this.setState({events})
       })
 
@@ -46,6 +49,11 @@ class TemporitaCalendar extends React.Component {
 
   onDropFromOutside = ({ start, end, allDay }) => {
     const draggedEvent = this.props.itemHandler.getDraggedItem();
+
+    // make end always an hour after the start date
+    end.setHours(start.getHours() + 1, start.getMinutes(), 0, 0);
+
+    console.log(start, end);
 
     const event = {
       id: draggedEvent.id,
@@ -133,13 +141,35 @@ class TemporitaCalendar extends React.Component {
     return {min: minTime, max: maxTime};
   }
 
-  eventRender({ event }) {
-    return (
-      <span style={{color: (event.color)}}>
-        <strong>{event.title}</strong>
-        {event.desc && ':  ' + event.desc}
-      </span>
-    )
+  eventRender(props) {
+    return <TemporitaCalendarEvent {...props} />
+  }
+
+  getFakeTimeSlot(minutes) { // this is a hack :(
+    const today = new Date();
+    today.setHours(this.props.settings.dayEnd);
+    today.setMinutes(minutes);
+    today.setSeconds(1);
+
+    return today;
+  }
+
+  getTimeFormat() {
+    return this.props.settings.timeFormat === "24h" ? "HH:mm" : "h:mm A";
+  }
+
+  getTimeRangeFormat() {
+    return ({ start, end }, culture, localizer) => {
+      return localizer.format(start, this.getTimeFormat()) + " - " + localizer.format(end, this.getTimeFormat());
+    };
+  }
+
+  timeFormats() {
+    return {
+      timeGutterFormat: this.getTimeFormat(),
+      eventTimeRangeFormat: this.getTimeRangeFormat(),
+      selectRangeFormat: this.getTimeRangeFormat()
+    }
   }
 
   render() {
@@ -151,17 +181,17 @@ class TemporitaCalendar extends React.Component {
 
         <Modal
           isOpen={this.state.modalIsOpen}
-          onRequestClose={false}
+          onRequestClose={() => console.log("Modal Closed")}
           style={{
           content : {
-              top                   : '50%',
-              left                  : '50%',
-              right                 : 'auto',
-              bottom                : 'auto',
-              marginRight           : '-50%',
-              height                : '50vh',
-              width                 : '40%',
-              transform             : 'translate(-50%, -50%)'
+              top: '50%',
+              left: '50%',
+              right: 'auto',
+              bottom: 'auto',
+              marginRight: '-50%',
+              height: '50vh',
+              width: '40%',
+              transform: 'translate(-50%, -50%)'
             }
           }}
           contentLabel="Example Modal"
@@ -174,9 +204,7 @@ class TemporitaCalendar extends React.Component {
             />
        </Modal>
       <DragAndDropCalendar
-        formats={{
-          timeGutterFormat: "HH:mm"
-        }}
+        formats={this.timeFormats()}
         selectable
         localizer={this.props.localizer}
         onEventDrop={this.moveEvent}
@@ -190,7 +218,7 @@ class TemporitaCalendar extends React.Component {
           }
         }}
         events={[
-          { start: new Date(), end: new Date(), title: "", hide: true },
+          { start: this.getFakeTimeSlot(0), end: this.getFakeTimeSlot(1), title: "", hide: true },
             ...this.state.events
         ]}
         step={10}
@@ -208,7 +236,7 @@ class TemporitaCalendar extends React.Component {
         handleDragStart={this.handleDragStart}
         onSelectSlot={this.handleSelect.bind(this)}
         components={{
-          event: this.eventRender
+          eventWrapper: this.eventRender 
         }}
       />
       </div>

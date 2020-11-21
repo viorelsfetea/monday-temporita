@@ -28,7 +28,11 @@ class App extends React.Component {
     // Default state
     this.state = {
       settings: {
-        background: '#000'
+        timeFormat: "24h",
+        weekends: false,
+        dayStart: "9",
+        dayEnd: "17",
+        hoursInDay: "8"
       },
       name: "",
       loading: true
