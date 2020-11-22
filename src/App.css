@@ -255,6 +255,10 @@ body * {
   box-shadow: none;
 }
 
+.rbc-header {
+  font-weight: normal;
+}
+
 .ModalHeader {
   font-size: 24px;
   font-weight: 400;

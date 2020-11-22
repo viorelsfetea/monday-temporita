@@ -223,6 +223,7 @@ class TemporitaCalendar extends React.Component {
       eventTimeRangeFormat: this.getTimeRangeFormat(),
       selectRangeFormat: this.getTimeRangeFormat(),
       dayHeaderFormat: "DD.MM.YYYY (dddd)",
+      dayFormat: "DD.MM.YYYY (dddd)",
     }
   }
 
