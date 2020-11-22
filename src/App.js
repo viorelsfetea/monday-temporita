@@ -80,7 +80,7 @@ class App extends React.Component {
 
     return <div className="App container-fluid" style={{background: (this.state.settings.background)}}>
         <div className="row">
-          <div className="col-3">
+          <div className="col-3 sidebar">
             <BoardList 
               monday={monday}
               itemHandler={this.itemHandler}

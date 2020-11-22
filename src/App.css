@@ -1,6 +1,11 @@
+@import "assets/roboto/style.css";
+
 body {
   margin: 0;
-  font-family: "Roboto", sans-serif;
+}
+
+body * {
+    font-family: "Roboto", sans-serif;
 }
 
 .App {
@@ -12,7 +17,7 @@ body {
   font-weight: 600;
 }
 
-.Boards {
+.sidebar .Boards {
   height: 90vh;
   overflow-y: auto;
 }
@@ -219,4 +224,27 @@ body {
 
 .rbc-today {
   background: #FFF;
+}
+
+.ModalHeader {
+  font-size: 24px;
+  font-weight: 400;
+  text-align: center;
+}
+
+.ModalBody {
+  height: 50vh;
+  overflow: auto;
+  padding: 0 16px;
+}
+
+.ModalFooter {
+  align-content: center;
+  display: flex;
+  justify-content: center;
+}
+
+.ModalFooter button {
+  height: 80%;
+  margin: 8px 0;
 }
