@@ -8,7 +8,7 @@ class TemporitaCalendarEventWork extends TemporitaCalendarEvent {
     return <div className={`TemporitaCalendarEventWeek ${this.getEventClass()}`}>
         <div className="EventColor" style={{background: event.color}}></div>
         <h5>{this.getFormattedDuration()}</h5>
-        <h4><span class="EventLabel">{this.props.label}: </span>{event.title}</h4>
+        <h4><span className="EventLabel">{this.props.label}: </span>{event.title}</h4>
       </div>
   }    
 }

@@ -9,6 +9,7 @@ import EventsDao from "../data/EventsDao";
 
 import TemporitaCalendarEventDay from "./calendar/TemporitaCalendarEventDay";
 import TemporitaCalendarEventWeek from "./calendar/TemporitaCalendarEventWeek";
+import TemporitaCalendarToolbar from "./calendar/TemporitaCalendarToolbar";
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.scss'
@@ -173,6 +174,10 @@ class TemporitaCalendar extends React.Component {
     return <TemporitaCalendarEventWeek {...props} label={label} />
   }
 
+  toolbarRender(props) {
+    return <TemporitaCalendarToolbar {...props} />;
+  }
+
   getFakeTimeSlot(minutes) { // this is a hack :(
     const today = new Date();
     today.setHours(this.props.settings.dayEnd);
@@ -196,18 +201,11 @@ class TemporitaCalendar extends React.Component {
     return {
       timeGutterFormat: this.getTimeFormat(),
       eventTimeRangeFormat: this.getTimeRangeFormat(),
-      selectRangeFormat: this.getTimeRangeFormat()
+      selectRangeFormat: this.getTimeRangeFormat(),
+      dayHeaderFormat: "DD.MM.YYYY (dddd)",
     }
   }
 
-WeekEvent({ event }) {
-  return (
-    <span>
-      <strong>{event.title}</strong>
-      {event.desc && ':  ' + event.desc}
-    </span>
-  )
-}
   render() {
     const {min, max} = this.getMinMaxTimes();
     let calendarViews = this.props.settings.weekends ? {week: true, day: true } : {work_week: true, day: true };
@@ -283,6 +281,7 @@ WeekEvent({ event }) {
         handleDragStart={this.handleDragStart}
         onSelectSlot={this.handleSelect.bind(this)}
         components={{
+          toolbar: this.toolbarRender.bind(this),
           day: {
             event: this.eventDayRender.bind(this)
           }, 
