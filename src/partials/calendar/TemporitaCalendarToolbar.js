@@ -3,6 +3,7 @@ import {navigate} from "react-big-calendar/lib/utils/constants";
 import Button from "monday-ui-react-core/dist/Button";
 import NavigationChevronLeft from "monday-ui-react-core/dist/icons/NavigationChevronLeft";
 import NavigationChevronRight from "monday-ui-react-core/dist/icons/NavigationChevronRight";
+import LinearProgressBar from "monday-ui-react-core/dist/LinearProgressBar";
 
 class TemporitaCalendarToolbar extends React.Component {
   navigate(action) {
@@ -16,6 +17,32 @@ class TemporitaCalendarToolbar extends React.Component {
     return date.getYear() === today.getYear() && date.getDate() === today.getDate() && date.getMonth() === today.getMonth();
   }
 
+  getLabel() {
+    let label = "Today";
+
+    if(this.props.view === "week") {
+      label = "This week";
+    }
+
+    return label;
+  }
+
+  getPlannedHoursFormatted() {
+    let result = "0h";
+    const hours = Math.floor(this.props.totalPlanned/60);
+    const minutes = Math.floor(this.props.totalPlanned % 60);
+
+    if(hours > 0) {
+      result = `${hours}h`;
+    }
+
+    if(minutes > 0) {
+      result += `${minutes}m`;
+    }
+
+    return result;
+  }
+
   render() {
     let {
       localizer: { messages },
@@ -26,7 +53,25 @@ class TemporitaCalendarToolbar extends React.Component {
       <div className="rbc-toolbar">
         <span>{this.viewNamesGroup(messages)}</span>
 
-        <span className="rbc-toolbar-label">{label}</span>
+        <div className="rbc-toolbar-label">
+          {label}
+
+          <div className="PlanningProgressBar">
+            <LinearProgressBar
+              value={this.props.totalPlanned}
+              animated={true}
+              max={this.props.settings.hoursInDay * 60}
+              min={0}
+              size={LinearProgressBar.sizes.LARGE}
+              indicateProgress={false}
+              barStyle={LinearProgressBar.styles.PRIMARY}
+              className="TemporitaProgressBar"
+            />
+            <div>
+              {this.getPlannedHoursFormatted()} / {this.props.settings.hoursInDay}h
+            </div>
+          </div>
+        </div>
 
         <span>
           <Button
@@ -40,7 +85,7 @@ class TemporitaCalendarToolbar extends React.Component {
             onClick={this.navigate.bind(this, navigate.TODAY)}
             active={this.isToday()}
           >
-            {messages.today}
+            {this.getLabel()}
           </Button>
           <Button
             size={Button.sizes.SMALL} kind={Button.kinds.TERTIARY}

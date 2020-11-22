@@ -30,7 +30,7 @@ class TemporitaCalendar extends React.Component {
 
     this.eventsDao.getCurrentEvents(this.props.currentUser, new Date(), this.props.settings.weekends)
       .then(events => {
-        this.setState({events})
+        this.updateEvents(events);
       })
 
     this.moveEvent = this.moveEvent.bind(this)
@@ -39,6 +39,22 @@ class TemporitaCalendar extends React.Component {
     this.selectedTimes = {
       start: null, end: null
     }
+  }
+
+  updateEvents(events) {
+    let totalsPerDay = {};
+    
+    events.forEach(event => {
+      const dayKey = this.getDayKey(event.start);
+      
+      if(!totalsPerDay.hasOwnProperty(dayKey)) {
+        totalsPerDay[dayKey] = 0;
+      }
+     
+      totalsPerDay[dayKey] += Math.floor((Math.abs(event.start - event.end)/1000)/60);
+    });
+
+    this.setState({events, totalsPerDay});
   }
 
   handleDragStart = event => {
@@ -54,8 +70,6 @@ class TemporitaCalendar extends React.Component {
 
     // make end always an hour after the start date
     end.setHours(start.getHours() + 1, start.getMinutes(), 0, 0);
-
-    console.log(start, end);
 
     const event = {
       id: draggedEvent.id,
@@ -97,9 +111,7 @@ class TemporitaCalendar extends React.Component {
       return existingEvent;
     })
 
-    this.setState({
-      events: nextEvents,
-    })
+    this.updateEvents(nextEvents);
   }
 
   itemToEvent(item) {
@@ -124,10 +136,8 @@ class TemporitaCalendar extends React.Component {
       end: event.end,
       color: event.color
     }
-    
-    this.setState({
-      events: this.state.events.concat([hour]),
-    });
+   
+    this.updateEvents(this.state.events.concat([hour]));
 
     this.eventsDao.save(this.props.currentUser, hour); 
   }
@@ -148,9 +158,7 @@ class TemporitaCalendar extends React.Component {
   removeEvent(event) {
     this.eventsDao.remove(this.props.currentUser, event);
 
-    this.setState({
-      events: this.state.events.filter(existingEvent => existingEvent.id !== event.id),
-    });
+    this.updateEvents(this.state.events.filter(existingEvent => existingEvent.id !== event.id));
   }
 
   getMinMaxTimes() {
@@ -175,8 +183,20 @@ class TemporitaCalendar extends React.Component {
   }
 
   toolbarRender(props) {
-    return <TemporitaCalendarToolbar {...props} />;
+    const settings = this.props.settings;
+    const dayKey = this.getDayKey(props.date);
+    let totalPlanned = 0;
+
+    if(this.state.totalsPerDay) {
+      totalPlanned = this.state.totalsPerDay.hasOwnProperty(dayKey) ? this.state.totalsPerDay[dayKey] : 0;
+    }
+
+    return <TemporitaCalendarToolbar {...props} settings={settings} totalPlanned={totalPlanned} />;
   }
+
+  getDayKey(date) {
+    return `${date.getDate()}-${date.getMonth()}-${date.getYear()}}`;
+  };
 
   getFakeTimeSlot(minutes) { // this is a hack :(
     const today = new Date();

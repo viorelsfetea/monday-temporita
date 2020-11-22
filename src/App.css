@@ -103,6 +103,7 @@ body * {
   justify-content: center;
   color: rgb(50, 51, 56);
   display: flex;
+  font-size: 18px;
   left: 50%;
   height: 100%;
   margin-left: -35%;
@@ -275,4 +276,16 @@ body * {
 .ModalFooter button {
   height: 80%;
   margin: 8px 0;
+}
+
+.PlanningProgressBar {
+  align-items: center;
+  display: flex;
+  margin: 10px auto 0;
+  width: 50%;
+}
+
+.PlanningProgressBar .TemporitaProgressBar {
+  margin-right: 8px;
+  width: 80%;
 }
