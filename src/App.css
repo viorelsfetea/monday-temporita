@@ -26,13 +26,18 @@ body {
   font-weight: 300;
 }
 
+.ItemWrapper {
+  border-bottom: 1px solid #FFF;
+}
+
 .Item {
   align-items: center;
   background: rgb(245, 246, 248);
+  border-bottom: 1px solid rgb(230, 233, 239);
   cursor: pointer;
   display: flex;
-  height: 30px;
-  line-height: 30px;
+  height: 36px;
+  line-height: 36px;
   width: 100%;
 }
 
@@ -48,11 +53,16 @@ body {
 }
 
 .Item h5 {
-  color: rgb(31, 118, 194);
+  color: rgb(50, 51, 56);
   font-size: 13px;
   font-weight: 400;
   line-height: inherit;
+  height: inherit;
   margin: 0 0 0 15px;
+  overflow: hidden;
+  text-overflow: "...";
+  width: 90%;
+  white-space: nowrap;
 }
 
 .TemporitaCalendar {
@@ -86,12 +96,14 @@ body {
 .TemporitaCalendarEvent h4 {
   align-items: center;
   justify-content: center;
-  color: rgb(31, 118, 194);
+  color: rgb(50, 51, 56);
   display: flex;
+  left: 50%;
   height: 100%;
+  margin-left: -35%;
   padding-top: 8px;
   position: absolute;
-  width: 100%;
+  width: 70%;
 }
 
 .TemporitaCalendarEvent.lessThan20Minutes h4 {
@@ -110,9 +122,17 @@ body {
   top: 0;
 }
 
+.TemporitaCalendarEventWeek .EventColor {
+  background: #000;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  width: 8px;
+}
+
 .TemporitaCalendarEvent .EventDuration {
   align-items: center;
-  color: rgb(31, 118, 194);
+  color: #0085FF;
   display: flex;
   height: 100%;
   padding: 8px 0 0 8px;
@@ -125,15 +145,39 @@ body {
   padding-right: 8px;
 }
 
+.TemporitaCalendarEventWeek h5 {
+  color: #0085FF;
+  margin-left: 16px;
+}
+
+.TemporitaCalendarEventWeek h4 {
+  color: #000;
+  font-size: 14px;
+  margin-left: 16px;
+  padding-right: 8px;
+}
+
 .TemporitaCalendarEvent.lessThan30Minutes .EventDuration {
   text-align: unset;
 }
 
 .TemporitaCalendarEvent .EventDuration h5 {
   margin: 0 8px 0 auto;
-  font-size: 26px;
+  font-size: 18px;
 }
 
+.TemporitaCalendarEvent.lessThan20Minutes .EventDuration h5 {
+  font-size: 12px;
+}
+
+.TemporitaCalendarEventWeek.lessThan20Minutes h5,
+.TemporitaCalendarEventWeek.lessThan20Minutes span.EventLabel {
+  display: none;
+}
+
+.TemporitaCalendarEvent.lessThan20Minutes .EventDuration h5 {
+  font-size: 12px;
+}
 .TemporitaCalendarEvent.lessThan20Minutes .EventDuration h5 {
   font-size: 12px;
 }
@@ -155,9 +199,10 @@ body {
 }
 
 .rbc-event {
-  background: rgb(250, 250, 250);
+  background: #F5F6F8;
+  box-shadow: 0.0px 4.0px 8.0px 0px rgba(0, 0, 0, 0.2);
   border: 1px solid #EEE !important;
-  border-radius: 0;
+  border-radius: 8px;
   padding: 0;
 }
 
@@ -166,4 +211,12 @@ body {
   width: 30px !important;
   z-index: 2;
   position: relative;
+}
+
+.rbc-event-label {
+  display: none;
+}
+
+.rbc-today {
+  background: #FFF;
 }

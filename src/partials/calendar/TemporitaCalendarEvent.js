@@ -49,27 +49,7 @@ class TemporitaCalendarEvent extends React.Component {
       return "lessThan2Hours";
     }
   }
-
-  render() {
-    const {event} = this.props;
-
-    const customDiv = (
-      <div className={`TemporitaCalendarEvent ${this.getEventClass()}`}>
-        <div className="EventColor" style={{background: event.color}}></div>
-        <h4>{event.title}</h4>
-        <div className="EventDuration">
-          <div className="EventLabel">{this.props.label}</div>
-          <h5>{this.getFormattedDuration()}</h5>
-        </div>
-      </div>
-    );
-    const eventDiv = React.cloneElement(this.props.children.props.children, {}, customDiv);
-    const wrapper = React.cloneElement(this.props.children, {}, eventDiv);
-    return (<div>
-      {wrapper}
-    </div>
-    );
-  }        
+    
 }
 
 export default TemporitaCalendarEvent;

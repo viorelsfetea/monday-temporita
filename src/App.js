@@ -28,7 +28,7 @@ class App extends React.Component {
     // Default state
     this.state = {
       settings: {
-        timeFormat: "24h",
+        time_format: "24h",
         weekends: false,
         dayStart: "9",
         dayEnd: "17",

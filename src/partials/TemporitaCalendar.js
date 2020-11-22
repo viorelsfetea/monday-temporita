@@ -6,7 +6,8 @@ import Modal from 'react-modal';
 import BoardList from "../partials/BoardList";
 import EventsDao from "../data/EventsDao";
 
-import TemporitaCalendarEvent from "../partials/calendar/TemporitaCalendarEvent";
+import TemporitaCalendarEventDay from "./calendar/TemporitaCalendarEventDay";
+import TemporitaCalendarEventWeek from "./calendar/TemporitaCalendarEventWeek";
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.scss'
@@ -27,7 +28,6 @@ class TemporitaCalendar extends React.Component {
 
     this.eventsDao.getCurrentEvents(this.props.currentUser, new Date(), this.props.settings.weekends)
       .then(events => {
-        console.log(events);
         this.setState({events})
       })
 
@@ -141,8 +141,14 @@ class TemporitaCalendar extends React.Component {
     return {min: minTime, max: maxTime};
   }
 
-  eventRender(props) {
-    return <TemporitaCalendarEvent {...props} />
+  eventDayRender(props) {
+    const label = this.props.localizer.format(props.event.start, this.getTimeFormat()) + " - " + this.props.localizer.format(props.event.end, this.getTimeFormat());
+    return <TemporitaCalendarEventDay {...props} label={label} />
+  }
+
+  eventWeekRender(props) {
+    const label = this.props.localizer.format(props.event.start, this.getTimeFormat()) + " - " + this.props.localizer.format(props.event.end, this.getTimeFormat());
+    return <TemporitaCalendarEventWeek {...props} label={label} />
   }
 
   getFakeTimeSlot(minutes) { // this is a hack :(
@@ -172,6 +178,14 @@ class TemporitaCalendar extends React.Component {
     }
   }
 
+WeekEvent({ event }) {
+  return (
+    <span>
+      <strong>{event.title}</strong>
+      {event.desc && ':  ' + event.desc}
+    </span>
+  )
+}
   render() {
     const {min, max} = this.getMinMaxTimes();
     let calendarViews = this.props.settings.weekends ? {week: true, day: true } : {work_week: true, day: true };
@@ -236,7 +250,13 @@ class TemporitaCalendar extends React.Component {
         handleDragStart={this.handleDragStart}
         onSelectSlot={this.handleSelect.bind(this)}
         components={{
-          eventWrapper: this.eventRender 
+          day: {
+            event: this.eventDayRender.bind(this)
+          }, 
+          week: {
+            event: this.eventWeekRender.bind(this)
+          }, 
+          //eventWrapper: this.eventRender 
         }}
       />
       </div>
