@@ -2,6 +2,10 @@ class EventsDao {
   constructor(monday, utils) {
     this.monday = monday;
     this.utils = utils;
+    this.actions = {
+      UPDATE: "update",
+      DELETE: "delete"
+    }
 
     this.saveErrorMessage = "Could not save this item. Please try again";
   }
@@ -23,17 +27,33 @@ class EventsDao {
   }
 
   update(user, event) {
+    this.changeEvents(user, event, this.actions.UPDATE);
+  }
+
+  remove(user, event) {
+    this.changeEvents(user, event, this.actions.DELETE);
+  }
+
+  changeEvents(user, event, type) {
     const eventKey = this.getKey(user, event.start);
 
     this.getExistingEvents(eventKey)
       .then(events => {
-        const nextEvents = events.map(existingEvent => {
-          if(existingEvent.id === event.id) {
-            return event;
-          }
+        let nextEvents = null;
 
-          return existingEvent;
-        });
+        if(type === this.actions.UPDATE) {
+          nextEvents = events.map(existingEvent => {
+            if(existingEvent.id === event.id) return event;
+
+            return existingEvent;
+          });
+        }
+
+        if(type === this.actions.DELETE) {
+          nextEvents = events.filter(existingEvent => existingEvent.id !== event.id);
+        }
+
+        if(nextEvents === null) return;
 
         this.monday.storage.instance.setItem(eventKey, JSON.stringify(nextEvents))
           .then(res => {

@@ -167,8 +167,15 @@ body * {
 }
 
 .TemporitaCalendarEvent .EventDuration h5 {
-  margin: 0 8px 0 auto;
+  align-items: center;
+  display: flex;
   font-size: 18px;
+  margin: 0 8px 0 auto;
+}
+
+.TemporitaCalendarEvent .EventDuration h5 button {
+  color: #0085FF;
+  margin: 0 0 0 8px;
 }
 
 .TemporitaCalendarEvent.lessThan20Minutes .EventDuration h5 {
@@ -183,8 +190,16 @@ body * {
 .TemporitaCalendarEvent.lessThan20Minutes .EventDuration h5 {
   font-size: 12px;
 }
-.TemporitaCalendarEvent.lessThan20Minutes .EventDuration h5 {
+
+.TemporitaCalendarEvent.lessThan20Minutes .EventDuration h5 button {
   font-size: 12px;
+  min-height: 12px;
+  padding: 0;
+  line-height: 12px;
+}
+
+.TemporitaCalendarEvent.lessThan20Minutes .EventDuration h5 button svg {
+  height: 14px;
 }
 
 .TemporitaCalendarEvent.lessThan30Minutes .EventDuration h5 {
@@ -209,6 +224,10 @@ body * {
   border: 1px solid #EEE !important;
   border-radius: 8px;
   padding: 0;
+}
+
+.rbc-event.rbc-selected {
+  background: #F5F6F8;
 }
 
 .rbc-addons-dnd-resize-ns-icon {

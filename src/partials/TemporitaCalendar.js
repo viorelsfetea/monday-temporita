@@ -131,6 +131,27 @@ class TemporitaCalendar extends React.Component {
     this.eventsDao.save(this.props.currentUser, hour); 
   }
 
+  onRemoveClick(event) {
+    this.props.monday.execute("confirm", {
+      message: "Do you want to remove this item from the calendar?", 
+      confirmButton: "Yes, remove", 
+      cancelButton: "No", 
+      excludeCancelButton: false
+    }).then((res) => {
+      if(res.data.confirm === true) {
+        this.removeEvent(event);
+      }
+    });
+  }
+
+  removeEvent(event) {
+    this.eventsDao.remove(this.props.currentUser, event);
+
+    this.setState({
+      events: this.state.events.filter(existingEvent => existingEvent.id !== event.id),
+    });
+  }
+
   getMinMaxTimes() {
     const minTime = new Date();
     const maxTime = new Date();
@@ -144,7 +165,7 @@ class TemporitaCalendar extends React.Component {
 
   eventDayRender(props) {
     const label = this.props.localizer.format(props.event.start, this.getTimeFormat()) + " - " + this.props.localizer.format(props.event.end, this.getTimeFormat());
-    return <TemporitaCalendarEventDay {...props} label={label} />
+    return <TemporitaCalendarEventDay {...props} label={label} onRemoveClick={this.onRemoveClick.bind(this)} />
   }
 
   eventWeekRender(props) {
