@@ -1,12 +1,8 @@
 import React from "react";
-import mondaySdk from "monday-sdk-js";
-import { momentLocalizer } from 'react-big-calendar'
+import {momentLocalizer} from 'react-big-calendar'
 import moment from 'moment'
-
 import ItemsDao from "./data/ItemsDao";
-import ItemHandler from "./libs/ItemHandler";
 
-import Utils from "./libs/Utils";
 import Preloader from "./partials/Preloader";
 import BoardList from "./partials/BoardList";
 import TemporitaCalendar from "./partials/TemporitaCalendar";
@@ -15,9 +11,8 @@ import "./App.css";
 import "./assets/fontawesome/css/all.min.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "monday-ui-react-core/dist/main.css"
-import UsersDao from "./data/UserDao";
+import Utils from "./libs/Utils";
 
-const monday = mondaySdk();
 
 const localizer = momentLocalizer(moment) // or globalizeLocalizer
 
@@ -27,47 +22,24 @@ class Planner extends React.Component {
 
     // Default state
     this.state = {
-      settings: {
-        time_format: "24h",
-        weekends: false,
-        dayStart: "9",
-        dayEnd: "17",
-        hoursInDay: "8"
-      },
-      name: "",
       loading: true
     };
 
-    this.utils = new Utils(monday);
-    this.itemsDao = new ItemsDao(monday);
-    this.usersDao = new UsersDao(monday);
-    this.itemHandler = new ItemHandler();
-  }
+    this.monday = this.props.monday;
 
-  loadApplication() {
-      Promise.all([this.itemsDao.getItems(), this.usersDao.getCurrentUser()])
-        .then(results => {
-          this.setState({
-            items: results[0],
-            currentUser: results[1].me,
-            loading: false
-          });
-        })
-        .catch(error => {
-          this.utils.showError(error.message)
-        });
+    this.utils = this.props.utils;
+    this.itemsDao = new ItemsDao(this.monday);
+    this.itemHandler = this.props.itemHandler;
   }
 
   componentDidMount() {
-    monday.listen("settings", res => {
-      this.setState({ settings: res.data, settingsHash: Utils.hashObject(res.data) });
-
-      this.loadApplication();
-    });
-    
-    monday.listen("context", res => {
-      this.setState({context: res.data});
-    });
+    this.itemsDao.getItems()
+      .then(items => {
+        this.setState({ items, loading: false });
+      })
+      .catch(error => {
+        this.utils.showError(error.message)
+      });
   }
 
   render() {
@@ -78,11 +50,11 @@ class Planner extends React.Component {
       return <Preloader />
     }
 
-    return <div className="App container-fluid" style={{background: (this.state.settings.background)}}>
+    return <div className="App container-fluid">
         <div className="row">
-          <div className="col-3">
+          <div className="col-3 sidebar">
             <BoardList 
-              monday={monday}
+              monday={this.monday}
               itemHandler={this.itemHandler}
               boards={boards} 
               draggable={true}
@@ -93,13 +65,13 @@ class Planner extends React.Component {
 
           <div className="col-9 pt-4">
             <TemporitaCalendar 
-              currentUser={this.state.currentUser}
-              monday={monday}
+              currentUser={this.props.user}
+              monday={this.monday}
               utils={this.utils}
               boards={boards}
               localizer={localizer}
               itemHandler={this.itemHandler}
-              settings={this.state.settings}
+              settings={this.props.settings}
             />
           </div>
         </div>

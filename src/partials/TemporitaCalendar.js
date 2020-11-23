@@ -13,6 +13,7 @@ import TemporitaCalendarToolbar from "./calendar/TemporitaCalendarToolbar";
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.scss'
+import Preloader from "./Preloader";
 
 const DragAndDropCalendar = withDragAndDrop(Calendar)
 
@@ -25,13 +26,9 @@ class TemporitaCalendar extends React.Component {
     this.state = {
       events: [],
       displayDragItemInCell: true,
-      modalIsOpen: false
+      modalIsOpen: false,
+      loading: true
     }
-
-    this.eventsDao.getCurrentEvents(this.props.currentUser, new Date(), this.props.settings.weekends)
-      .then(events => {
-        this.updateEvents(events);
-      })
 
     this.moveEvent = this.moveEvent.bind(this)
     this.newEvent = this.newEvent.bind(this)
@@ -39,6 +36,14 @@ class TemporitaCalendar extends React.Component {
     this.selectedTimes = {
       start: null, end: null
     }
+  }
+
+  componentDidMount() {
+    this.eventsDao.getCurrentEvents(this.props.currentUser, new Date(), this.props.settings.weekends)
+      .then(events => {
+        this.updateEvents(events);
+        this.setState({loading: false})
+      })
   }
 
   updateEvents(events) {
@@ -233,7 +238,7 @@ class TemporitaCalendar extends React.Component {
 
     return (
       <div className="TemporitaCalendar">
-
+        {this.state.loading ? <Preloader /> : ""}
         <Modal
           isOpen={this.state.modalIsOpen}
           onRequestClose={() => console.log("Modal Closed")}

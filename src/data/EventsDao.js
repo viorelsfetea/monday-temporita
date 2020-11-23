@@ -98,6 +98,12 @@ class EventsDao {
     });
   }
 
+  getTodayEvents(user) {
+    const eventKey = this.getKey(user, new Date());
+
+    return this.getExistingEvents(eventKey);
+  }
+
   getKey(user, date) {
     return `event-${user.id}-${this.formatDate(date)}`
   }
