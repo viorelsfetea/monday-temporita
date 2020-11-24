@@ -17,7 +17,6 @@ class ModalBoardList extends React.Component {
           right: 'auto',
           bottom: 'auto',
           marginRight: '-50%',
-          height: '60vh',
           width: '40%',
           transform: 'translate(-50%, -50%)'
         }
