@@ -12,6 +12,7 @@ class ModalBoardList extends React.Component {
       style={{
         content : {
           borderRadius: '16px',
+          boxShadow: '0.0px 15.0px 50.0px 0px rgba(0, 0, 0, 0.3)',
           top: '40%',
           left: '50%',
           right: 'auto',

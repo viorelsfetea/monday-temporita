@@ -11,6 +11,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.scss'
 import Preloader from "./Preloader";
 import ModalBoardList from "./modals/ModalBoardList";
+import ModalImplementationIntentions from "./modals/ModalImplementationIntentions";
 
 const DragAndDropCalendar = withDragAndDrop(Calendar)
 
@@ -23,7 +24,8 @@ class TemporitaCalendar extends React.Component {
     this.state = {
       events: [],
       displayDragItemInCell: true,
-      modalIsOpen: false,
+      boardListModalIsOpen: false,
+      implementationIntentionsModalIsOpen: false,
       loading: true
     }
 
@@ -87,7 +89,7 @@ class TemporitaCalendar extends React.Component {
   }
 
   handleSelect({ start, end }) {
-    this.setState({modalIsOpen: true});
+    this.setState({boardListModalIsOpen: true});
     this.selectedTimes.start = start;
     this.selectedTimes.end = end;
   }
@@ -125,7 +127,7 @@ class TemporitaCalendar extends React.Component {
       color: item.color
     });
 
-    this.setState({modalIsOpen: false});
+    this.setState({boardListModalIsOpen: false});
   }
 
   newEvent = event => {
@@ -164,7 +166,7 @@ class TemporitaCalendar extends React.Component {
   }
 
   onImplementationIntentionClick(event) {
-    console.log('TemporitaCalendar.js:170', "ON IMPLEMENTATION INTENTIONS");
+    this.setState({implementationIntentionsModalIsOpen: true});
   }
 
   getMinMaxTimes() {
@@ -242,12 +244,17 @@ class TemporitaCalendar extends React.Component {
         {this.state.loading ? <Preloader /> : ""}
 
         <ModalBoardList
-          modalIsOpen={this.state.modalIsOpen}
+          modalIsOpen={this.state.boardListModalIsOpen}
           monday={this.props.monday}
           itemHandler={this.props.itemHandler}
           boards={this.props.boards}
           onItemClick={this.itemToEvent.bind(this)}
-          onCloseClick={() => this.setState({modalIsOpen: false})} />
+          onCloseClick={() => this.setState({boardListModalIsOpen: false})} />
+
+        <ModalImplementationIntentions
+          modalIsOpen={this.state.implementationIntentionsModalIsOpen}
+          onCloseClick={() => this.setState({implementationIntentionsModalIsOpen: false})} />
+        />
 
       <DragAndDropCalendar
         formats={this.timeFormats()}

@@ -349,3 +349,29 @@ body * {
   font-size: 18px;
   font-weight: 600;
 }
+
+.AddNewImplementationIntention label {
+  font-size: 14px;
+  line-height: 22px;
+  margin: 32px 0 0 0;
+}
+
+.ButtonExplanation {
+  margin: 0 0 0 8px;
+}
+
+.ModalExplanation {
+  justify-content: center;
+  display: flex;
+  font-size: 16px;
+  flex-direction: column;
+}
+
+.AddNewImplementationIntention .monday-style-button.monday-style-button--loading {
+  width: 40px !important;
+}
+
+.AddNewImplementationIntention .monday-style-button--size-sm .monday-style-button__loader {
+  height: 20px;
+  width: 25px;
+}
