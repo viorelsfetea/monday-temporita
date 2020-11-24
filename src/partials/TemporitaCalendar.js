@@ -1,10 +1,6 @@
 import React from 'react'
-import { Calendar, Views } from 'react-big-calendar'
+import {Calendar, Views} from 'react-big-calendar'
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
-import Modal from 'react-modal';
-import Button from 'monday-ui-react-core/dist/Button';
-
-import BoardList from "../partials/BoardList";
 import EventsDao from "../data/EventsDao";
 
 import TemporitaCalendarEventDay from "./calendar/TemporitaCalendarEventDay";
@@ -14,6 +10,7 @@ import TemporitaCalendarToolbar from "./calendar/TemporitaCalendarToolbar";
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.scss'
 import Preloader from "./Preloader";
+import ModalBoardList from "./modals/ModalBoardList";
 
 const DragAndDropCalendar = withDragAndDrop(Calendar)
 
@@ -166,6 +163,10 @@ class TemporitaCalendar extends React.Component {
     this.updateEvents(this.state.events.filter(existingEvent => existingEvent.id !== event.id));
   }
 
+  onImplementationIntentionClick(event) {
+    console.log('TemporitaCalendar.js:170', "ON IMPLEMENTATION INTENTIONS");
+  }
+
   getMinMaxTimes() {
     const minTime = new Date();
     const maxTime = new Date();
@@ -179,7 +180,7 @@ class TemporitaCalendar extends React.Component {
 
   eventDayRender(props) {
     const label = this.props.localizer.format(props.event.start, this.getTimeFormat()) + " - " + this.props.localizer.format(props.event.end, this.getTimeFormat());
-    return <TemporitaCalendarEventDay {...props} label={label} onRemoveClick={this.onRemoveClick.bind(this)} />
+    return <TemporitaCalendarEventDay {...props} label={label} onRemoveClick={this.onRemoveClick.bind(this)} onImplementationIntentionClick={this.onImplementationIntentionClick.bind(this)} />
   }
 
   eventWeekRender(props) {
@@ -239,41 +240,15 @@ class TemporitaCalendar extends React.Component {
     return (
       <div className="TemporitaCalendar">
         {this.state.loading ? <Preloader /> : ""}
-        <Modal
-          isOpen={this.state.modalIsOpen}
-          onRequestClose={() => console.log("Modal Closed")}
-          style={{
-          content : {
-              borderRadius: '16px',
-              top: '40%',
-              left: '50%',
-              right: 'auto',
-              bottom: 'auto',
-              marginRight: '-50%',
-              height: '60vh',
-              width: '40%',
-              transform: 'translate(-50%, -50%)'
-            }
-          }}
-          contentLabel="Example Modal"
-        >
-          <div className="ModalHeader">
-            <h5>Click on an item in the list to set it in the timeslot</h5>
-          </div>
-          <div className="ModalBody">
-            <BoardList 
-              monday={this.props.monday}
-              itemHandler={this.itemHandler}
-              boards={this.props.boards} 
-              onItemClick={this.itemToEvent.bind(this)}
-            />
-          </div>
-          <div className="ModalFooter">
-            <Button size={Button.sizes.MEDIUM} kind={Button.kinds.TERTIARY} onClick={() => this.setState({modalIsOpen: false})}>
-              Close Window
-            </Button>
-          </div>
-       </Modal>
+
+        <ModalBoardList
+          modalIsOpen={this.state.modalIsOpen}
+          monday={this.props.monday}
+          itemHandler={this.props.itemHandler}
+          boards={this.props.boards}
+          onItemClick={this.itemToEvent.bind(this)}
+          onCloseClick={() => this.setState({modalIsOpen: false})} />
+
       <DragAndDropCalendar
         formats={this.timeFormats()}
         selectable

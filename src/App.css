@@ -180,6 +180,11 @@ body * {
   margin: 0 0 0 8px;
 }
 
+.TemporitaCalendarEvent .EventLabel button {
+  color: #0085FF;
+  margin: 0 8px 0 0;
+}
+
 .TemporitaCalendarEvent.lessThan20Minutes .EventDuration h5 {
   font-size: 12px;
 }

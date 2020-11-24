@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "npm run stop && concurrently \"npm run server\" \"npm run expose\"",
+    "start": "npm run stop && concurrently \"npm run server\"",
     "build": "react-scripts build",
     "expose": "lt --port 8301",
     "server": "react-scripts start",
