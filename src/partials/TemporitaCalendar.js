@@ -26,6 +26,8 @@ class TemporitaCalendar extends React.Component {
       displayDragItemInCell: true,
       boardListModalIsOpen: false,
       implementationIntentionsModalIsOpen: false,
+      setIntentionsFor: null,
+      eventForIntentions: null,
       loading: true
     }
 
@@ -166,7 +168,7 @@ class TemporitaCalendar extends React.Component {
   }
 
   onImplementationIntentionClick(event) {
-    this.setState({implementationIntentionsModalIsOpen: true});
+    this.setState({setIntentionsFor: "event", eventForIntentions: event, implementationIntentionsModalIsOpen: true});
   }
 
   getMinMaxTimes() {
@@ -253,7 +255,12 @@ class TemporitaCalendar extends React.Component {
 
         <ModalImplementationIntentions
           modalIsOpen={this.state.implementationIntentionsModalIsOpen}
-          onCloseClick={() => this.setState({implementationIntentionsModalIsOpen: false})} />
+          monday={this.props.monday}
+          user={this.props.currentUser}
+          utils={this.props.utils}
+          type={this.state.setIntentionsFor}
+          event={this.state.eventForIntentions}
+          onCloseClick={() => this.setState({implementationIntentionsModalIsOpen: false})}
         />
 
       <DragAndDropCalendar
