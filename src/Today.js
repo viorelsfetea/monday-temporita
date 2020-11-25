@@ -4,25 +4,29 @@ import Item from "./partials/Item";
 import Preloader from "./partials/Preloader";
 import moment from 'moment'
 import EventsDao from "./data/EventsDao";
+import ImplementationIntentionsDao from "./data/ImplementationIntentionsDao";
 
 class Today extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      events: [],
+      intentions: [],
       loading: true,
       currentItem: null
     }
     
     this.eventsDao = new EventsDao(props.monday, props.utils);
+    this.intentionsDao = new ImplementationIntentionsDao(props.monday);
   }
   
   getItems() {
     if(!this.props.user) return;
 
-    this.eventsDao.getTodayEvents(this.props.user)
-      .then(events => {
-        this.setState({events, loading: false})
+    Promise.all([this.eventsDao.getTodayEvents(this.props.user), this.intentionsDao.getImplementationsForDay(this.props.user, new Date())])
+      .then(results => {
+        this.setState({events: results[0], intentions: results[1], loading: false})
         this.findCurrentItems();
       })
       .catch(error => this.props.utils.showError(error.message));
@@ -96,15 +100,44 @@ class Today extends React.Component {
     const currentItem = this.findCurrentItem(currentDate);
     const nextItem = this.findNextItem(currentItem, currentDate);
 
+    if(currentItem !== null) {
+      this.findIntentionsForItem(currentItem);
+    }
+
     this.setState({
       currentItem, nextItem,
       nextCalculationTime: currentItem ? new Date(currentItem.end) : undefined
     });
   }
+
+  findIntentionsForItem(event) {
+    event["monday_id"] = event.id;
+    this.intentionsDao.getImplementationsForItem(this.props.user, event)
+      .then(intentions => {
+        if(!intentions) return;
+        this.setState({intentions: this.state.intentions.concat(intentions)});
+      })
+      .catch(error => this.props.utils.showError(error.message));
+  }
   
   componentDidMount() {
     this.getItems();
     this.updateTime();
+  }
+
+  getIntentions() {
+    const intentions = this.state.intentions;
+
+    if(intentions.length === 0) return;
+
+    return <div>
+      <h3>Having trouble?</h3>
+      <h4>Don't sweat it. You've planned for it!</h4>
+      {intentions.map(intention =>
+        <div>If <strong><em>{intention.situation}</em></strong> then <strong><em>{intention.action}</em></strong></div>
+      )}
+    </div>
+
   }
 
   render() {
@@ -128,6 +161,8 @@ class Today extends React.Component {
 
       { currentItem ? this.getItem(currentItem) : "" }
       { !currentItem ? <div className="TodayNoItemSet">There's nothing planned right now. Relax or <Link to="/planner">plan something.</Link></div> : "" }
+
+      {this.getIntentions()}
 
       <h3>
         Next up is:

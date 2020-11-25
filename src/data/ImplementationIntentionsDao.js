@@ -65,7 +65,7 @@ class ImplementationIntentionsDao {
     this.monday.storage.instance.setItem(this.getUserKey(user), JSON.stringify(this.initialStructure)); // Fire and foooorget
   }
 
-  getEventsForDay(user, date) {
+  getImplementationsForDay(user, date) {
     const key = this.getDayKey(user, date);
 
     return this.getImplementations(key);

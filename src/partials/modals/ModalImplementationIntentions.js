@@ -49,7 +49,7 @@ class ModalImplementationIntentions extends React.Component {
     }
 
     if(this.props.type === "day") {
-      actions.push(this.dao.getEventsForDay(this.props.user, this.props.date))
+      actions.push(this.dao.getImplementationsForDay(this.props.user, this.props.date))
     }
 
     Promise.all(actions)
