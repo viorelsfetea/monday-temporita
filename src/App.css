@@ -254,6 +254,7 @@ body * {
 
 .rbc-toolbar button {
   border: none;
+  margin: 0 8px 0 0;
 }
 
 .rbc-toolbar button:active, .rbc-toolbar button.rbc-active {

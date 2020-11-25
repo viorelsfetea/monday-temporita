@@ -5,6 +5,8 @@ import NavigationChevronLeft from "monday-ui-react-core/dist/icons/NavigationChe
 import NavigationChevronRight from "monday-ui-react-core/dist/icons/NavigationChevronRight";
 import LinearProgressBar from "monday-ui-react-core/dist/LinearProgressBar";
 import {Link} from "react-router-dom";
+import Sun from "monday-ui-react-core/dist/icons/Sun";
+import Tooltip from "monday-ui-react-core/dist/Tooltip";
 
 class TemporitaCalendarToolbar extends React.Component {
   navigate(action) {
@@ -44,6 +46,41 @@ class TemporitaCalendarToolbar extends React.Component {
     return result;
   }
 
+  getImplementationIntentionsButton() {
+    if(this.props.view !== "day") return;
+
+    return <Tooltip
+      showDelay={300}
+      content="Implementation intentions"
+      containerSelector="body"
+    >
+      <Button size={Button.sizes.SMALL} kind={Button.kinds.TERTIARY} onClick={() => this.props.onImplementationIntentionClick(this.props.date)}>
+        <Sun />
+      </Button>
+    </Tooltip>
+  }
+
+  getProgressBar() {
+    if(this.props.view !== "day") return;
+
+    return <div className="PlanningProgressBar">
+      <Link to="/today">Today</Link>
+      <LinearProgressBar
+        value={this.props.totalPlanned}
+        animated={true}
+        max={this.props.settings.hoursInDay * 60}
+        min={0}
+        size={LinearProgressBar.sizes.LARGE}
+        indicateProgress={false}
+        barStyle={LinearProgressBar.styles.PRIMARY}
+        className="TemporitaProgressBar"
+      />
+      <div>
+        {this.getPlannedHoursFormatted()} / {this.props.settings.hoursInDay}h
+      </div>
+    </div>
+  }
+
   render() {
     let {
       localizer: { messages },
@@ -55,24 +92,9 @@ class TemporitaCalendarToolbar extends React.Component {
         <span>{this.viewNamesGroup(messages)}</span>
 
         <div className="rbc-toolbar-label">
+          {this.getImplementationIntentionsButton()}
           {label}
-
-          <div className="PlanningProgressBar">
-            <Link to="/today">Today</Link>
-            <LinearProgressBar
-              value={this.props.totalPlanned}
-              animated={true}
-              max={this.props.settings.hoursInDay * 60}
-              min={0}
-              size={LinearProgressBar.sizes.LARGE}
-              indicateProgress={false}
-              barStyle={LinearProgressBar.styles.PRIMARY}
-              className="TemporitaProgressBar"
-            />
-            <div>
-              {this.getPlannedHoursFormatted()} / {this.props.settings.hoursInDay}h
-            </div>
-          </div>
+          {this.getProgressBar()}
         </div>
 
         <span>

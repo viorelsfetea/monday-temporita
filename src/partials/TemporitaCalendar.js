@@ -171,6 +171,10 @@ class TemporitaCalendar extends React.Component {
     this.setState({setIntentionsFor: "event", eventForIntentions: event, implementationIntentionsModalIsOpen: true});
   }
 
+  onImplementationIntentionDayClick(date) {
+    this.setState({setIntentionsFor: "day", dateForIntentions: date, implementationIntentionsModalIsOpen: true});
+  }
+
   getMinMaxTimes() {
     const minTime = new Date();
     const maxTime = new Date();
@@ -201,7 +205,7 @@ class TemporitaCalendar extends React.Component {
       totalPlanned = this.state.totalsPerDay.hasOwnProperty(dayKey) ? this.state.totalsPerDay[dayKey] : 0;
     }
 
-    return <TemporitaCalendarToolbar {...props} settings={settings} totalPlanned={totalPlanned} />;
+    return <TemporitaCalendarToolbar {...props} settings={settings} totalPlanned={totalPlanned} onImplementationIntentionClick={this.onImplementationIntentionDayClick.bind(this)}/>;
   }
 
   getDayKey(date) {
@@ -260,6 +264,7 @@ class TemporitaCalendar extends React.Component {
           utils={this.props.utils}
           type={this.state.setIntentionsFor}
           event={this.state.eventForIntentions}
+          date={this.state.dateForIntentions}
           onCloseClick={() => this.setState({implementationIntentionsModalIsOpen: false})}
         />
 

@@ -9,6 +9,7 @@ class ModalBoardList extends React.Component {
    return <Modal
       isOpen={this.props.modalIsOpen}
       onRequestClose={() => this.props.onCloseClick()}
+      ariaHideApp={false}
       style={{
         content : {
           borderRadius: '16px',

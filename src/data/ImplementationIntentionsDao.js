@@ -57,13 +57,27 @@ class ImplementationIntentionsDao {
     return `ii-${user.id}-${event.monday_id}`;
   }
 
+  getDayKey(user, date) {
+    return `ii-${user.id}-${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`;
+  }
+
   initiateIntentionsForUser(user) {
     this.monday.storage.instance.setItem(this.getUserKey(user), JSON.stringify(this.initialStructure)); // Fire and foooorget
   }
 
-  getEventsForItem(user, event) {
+  getEventsForDay(user, date) {
+    const key = this.getDayKey(user, date);
+
+    return this.getImplementations(key);
+  }
+
+  getImplementationsForItem(user, event) {
     const key = this.getEventKey(user, event);
 
+    return this.getImplementations(key);
+  }
+
+  getImplementations(key) {
     return new Promise((resolve, reject) => {
       const cached = Cache.read(key);
 
@@ -80,17 +94,27 @@ class ImplementationIntentionsDao {
     });
   }
 
-  saveEventsForItem(user, event, intentions) {
+  saveImplementationsForDay(user, date, intentions) {
+    const key = this.getDayKey(user, date);
+
+    return this.saveImplementations(key, intentions);
+  }
+
+  saveImplementationsForItem(user, event, intentions) {
     const key = this.getEventKey(user, event);
 
-   return new Promise((resolve, reject) => {
+    return this.saveImplementations(key, intentions);
+  }
+
+  saveImplementations(key, intentions) {
+    return new Promise((resolve, reject) => {
       this.monday.storage.instance.setItem(key, JSON.stringify(intentions))
         .then(() => {
           Cache.write(key, intentions);
           resolve();
         })
         .catch(error => reject(error))
-   });
+    });
   }
 }
 

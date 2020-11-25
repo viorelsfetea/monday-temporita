@@ -33,6 +33,10 @@ class ModalImplementationIntentions extends React.Component {
    }
   }
 
+  getTypeKey() {
+    return this.props.type === "day" ? "PER_DAY" : "PER_TASK";
+  }
+
   modalOpened() {
     //this.dao.updateIntentionsByUser(this.props.user, null);
 
@@ -41,11 +45,11 @@ class ModalImplementationIntentions extends React.Component {
     let actions = [this.dao.getIntentionsByUser(this.props.user)];
 
     if(this.props.type === "event") {
-      actions.push(this.dao.getEventsForItem(this.props.user, this.props.event))
+      actions.push(this.dao.getImplementationsForItem(this.props.user, this.props.event))
     }
 
     if(this.props.type === "day") {
-      //actions.push(this.dao.getEventsForItem(this.props.user, this.props.event))
+      actions.push(this.dao.getEventsForDay(this.props.user, this.props.date))
     }
 
     Promise.all(actions)
@@ -53,7 +57,7 @@ class ModalImplementationIntentions extends React.Component {
         this.setState({
           loading: false,
           intentions: results[0],
-          selectorIntentions: results[0]["PER_TASK"].map(intention => this.formatSelectorLabel(intention)),
+          selectorIntentions: results[0][this.getTypeKey()].map(intention => this.formatSelectorLabel(intention)),
           selectorIntentionsSelected: results[1] ? results[1].map(intention => this.formatSelectorLabel(intention)) : []
         })
       })
@@ -115,7 +119,7 @@ class ModalImplementationIntentions extends React.Component {
     const selectorIntention = this.formatSelectorLabel(intention);
 
     const intentions = this.state.intentions;
-    intentions["PER_TASK"] = intentions["PER_TASK"].concat([intention]);
+    intentions[this.getTypeKey()] = intentions[this.getTypeKey()].concat([intention]);
 
     this.dao.updateIntentionsByUser(this.props.user, intentions)
       .then(() => {
@@ -142,7 +146,22 @@ class ModalImplementationIntentions extends React.Component {
   }
 
   setIntentionsForDay() {
-    return undefined;
+    this.setState({savingIntentions: true});
+
+    const intentions = this.state.selectorIntentionsSelected.map(intention => {
+      return this.state.intentions["PER_DAY"].find(item => item.id === intention.id)
+    });
+
+    this.dao.saveImplementationsForDay(this.props.user, this.props.date, intentions)
+      .then(() => {
+        this.setState({savingIntentions: false});
+        this.props.onCloseClick();
+      })
+      .catch(error => {
+        this.setState({savingIntentions: false});
+        console.error("Temporita", error);
+        this.utils.showError("Could not save implementation intentions. Please try again");
+      })
   }
 
   setIntentionsForItem() {
@@ -152,7 +171,7 @@ class ModalImplementationIntentions extends React.Component {
       return this.state.intentions["PER_TASK"].find(item => item.id === intention.id)
     });
 
-    this.dao.saveEventsForItem(this.props.user, this.props.event, intentions)
+    this.dao.saveImplementationsForItem(this.props.user, this.props.event, intentions)
       .then(() => {
         this.setState({savingIntentions: false});
         this.props.onCloseClick();
@@ -202,6 +221,7 @@ class ModalImplementationIntentions extends React.Component {
     return <div>
       <Modal
         isOpen={this.state.modalExplanationIsOpen}
+        ariaHideApp={false}
         onRequestClose={() => this.setState({modalExplanationIsOpen: false})}
         style={{
            content : {
@@ -244,6 +264,7 @@ class ModalImplementationIntentions extends React.Component {
        isOpen={this.props.modalIsOpen}
        onRequestClose={() => this.props.onCloseClick()}
        onAfterOpen={() => this.modalOpened()}
+       ariaHideApp={false}
        style={{
          content: {
            borderRadius: '16px',
@@ -264,7 +285,7 @@ class ModalImplementationIntentions extends React.Component {
        contentLabel="Implementation Intentions"
      >
        <div className="ModalHeader">
-         <h5><Sun /> Implementation intentions for this item
+         <h5><Sun /> Implementation intentions for {this.props.type === "day" ? "day" : "item"}
            <Button className="ButtonExplanation" size={Button.sizes.SMALL} kind={Button.kinds.TERTIARY} onClick={() => this.setState({modalExplanationIsOpen: true})}>
              <i className="far fa-question-circle"></i> what are those?
            </Button>
