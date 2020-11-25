@@ -1,3 +1,5 @@
+import Cache from "./Cache";
+
 class EventsDao {
   constructor(monday, utils) {
     this.monday = monday;
@@ -19,6 +21,7 @@ class EventsDao {
 
         this.monday.storage.instance.setItem(eventKey, JSON.stringify(events))
           .then(res => {
+            Cache.write(eventKey, events);
             // Does the user need feedback if an event was successfully saved?
           })
           .catch(error => this.utils.showError(this.saveErrorMessage));
@@ -57,6 +60,7 @@ class EventsDao {
 
         this.monday.storage.instance.setItem(eventKey, JSON.stringify(nextEvents))
           .then(res => {
+            Cache.write(eventKey, nextEvents);
             // Does the user need feedback if an event was successfully saved?
           })
           .catch(error => this.utils.showError(this.saveErrorMessage));
@@ -76,20 +80,44 @@ class EventsDao {
     const keys = dates.map(date => this.getKey(user, date));
 
     return new Promise((resolve, reject) => {
-      Promise.all(keys.map(key => this.monday.storage.instance.getItem(key)))
-        .then(results => {
-          let events = [];
+      let events = [];
+      let remainingKeys = [];
 
-          results.forEach(result => {
-            if(result.data.value !== null) {
-              const eventsRaw = JSON.parse(result.data.value);
-              events = events.concat(eventsRaw.map(event => {
-                event.start = new Date(event.start);
-                event.end = new Date(event.end);
-                
-                return event;
-              }));
-            }
+      keys.forEach(key => {
+        const cached = Cache.read(key);
+
+        if(cached) {
+          events = events.concat(cached.map(event => {
+            event.start = new Date(event.start);
+            event.end = new Date(event.end);
+
+            return event;
+          }));
+        } else {
+          remainingKeys.push(key);
+        }
+      });
+
+      if(remainingKeys.length === 0) {
+        resolve(events);
+        return;
+      }
+      
+      Promise.all(remainingKeys.map(key => this.monday.storage.instance.getItem(key)))
+        .then(results => {
+          results.forEach((result, index) => {
+            if(result.data.value === null) return;
+
+            const eventsRaw = JSON.parse(result.data.value);
+
+            Cache.write(remainingKeys[index], eventsRaw);
+
+            events = events.concat(eventsRaw.map(event => {
+              event.start = new Date(event.start);
+              event.end = new Date(event.end);
+
+              return event;
+            }));
           });
 
           resolve(events);
@@ -110,6 +138,13 @@ class EventsDao {
 
   getExistingEvents(eventKey) {
     return new Promise((resolve, reject) => {
+      const cached = Cache.read(eventKey);
+
+      if(!cached) {
+        resolve(cached);
+        return;
+      }
+
       this.monday.storage.instance.getItem(eventKey)
         .then(res => {
           let events = [];
