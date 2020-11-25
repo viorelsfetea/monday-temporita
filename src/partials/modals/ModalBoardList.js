@@ -8,7 +8,7 @@ class ModalBoardList extends React.Component {
   render() {
    return <Modal
       isOpen={this.props.modalIsOpen}
-      onRequestClose={() => console.log("Modal Closed")}
+      onRequestClose={() => this.props.onCloseClick()}
       style={{
         content : {
           borderRadius: '16px',

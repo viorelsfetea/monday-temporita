@@ -202,24 +202,24 @@ class ModalImplementationIntentions extends React.Component {
     return <div>
       <Modal
         isOpen={this.state.modalExplanationIsOpen}
-
-       style={{
-         content : {
-           borderRadius: '16px',
-           boxShadow: '0.0px 15.0px 50.0px 0px rgba(0, 0, 0, 0.3)',
-           top: '40%',
-           left: '50%',
-           right: 'auto',
-           bottom: 'auto',
-           marginRight: '-50%',
-           width: '30%',
-           transform: 'translate(-50%, -50%)',
-         },
-         overlay: {
-           zIndex: 99
-         }
-       }}
-     >
+        onRequestClose={() => this.setState({modalExplanationIsOpen: false})}
+        style={{
+           content : {
+             borderRadius: '16px',
+             boxShadow: '0.0px 15.0px 50.0px 0px rgba(0, 0, 0, 0.3)',
+             top: '40%',
+             left: '50%',
+             right: 'auto',
+             bottom: 'auto',
+             marginRight: '-50%',
+             width: '30%',
+             transform: 'translate(-50%, -50%)',
+           },
+           overlay: {
+             zIndex: 99
+           }
+         }}
+       >
        <div className="ModalHeader">
          <h4>Implementation intentions</h4>
        </div>
