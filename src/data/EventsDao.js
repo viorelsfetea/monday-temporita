@@ -24,9 +24,15 @@ class EventsDao {
             Cache.write(eventKey, events);
             // Does the user need feedback if an event was successfully saved?
           })
-          .catch(error => this.utils.showError(this.saveErrorMessage));
+          .catch(error => {
+            console.error("Temporita", error);
+            this.utils.showError(this.saveErrorMessage)
+          });
       })
-      .catch(error => this.utils.showError(this.saveErrorMessage));
+      .catch(error => {
+        console.error("Temporita", error);
+        this.utils.showError(this.saveErrorMessage)
+      });
   }
 
   update(user, event) {
@@ -63,9 +69,15 @@ class EventsDao {
             Cache.write(eventKey, nextEvents);
             // Does the user need feedback if an event was successfully saved?
           })
-          .catch(error => this.utils.showError(this.saveErrorMessage));
+          .catch(error => {
+            console.error("Temporita", error);
+            this.utils.showError(this.saveErrorMessage)
+          });
       })
-      .catch(error => this.utils.showError(this.saveErrorMessage));
+      .catch(error => {
+        console.error("Temporita", error);
+        this.utils.showError(this.saveErrorMessage)
+      });
   }
 
   /**
@@ -140,7 +152,7 @@ class EventsDao {
     return new Promise((resolve, reject) => {
       const cached = Cache.read(eventKey);
 
-      if(!cached) {
+      if(cached) {
         resolve(cached);
         return;
       }

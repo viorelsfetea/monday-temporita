@@ -5,16 +5,20 @@ import Preloader from "./partials/Preloader";
 import moment from 'moment'
 import EventsDao from "./data/EventsDao";
 import ImplementationIntentionsDao from "./data/ImplementationIntentionsDao";
+import Quote from "./partials/Quote";
 
 class Today extends React.Component {
   constructor(props) {
     super(props);
 
+    const quote = new Quote();
+
     this.state = {
       events: [],
       intentions: [],
       loading: true,
-      currentItem: null
+      currentItem: null,
+      quote: quote.getRandom()
     }
     
     this.eventsDao = new EventsDao(props.monday, props.utils);
@@ -26,8 +30,13 @@ class Today extends React.Component {
 
     Promise.all([this.eventsDao.getTodayEvents(this.props.user), this.intentionsDao.getImplementationsForDay(this.props.user, new Date())])
       .then(results => {
-        this.setState({events: results[0], intentions: results[1], loading: false})
-        this.findCurrentItems();
+        this.setState({
+          events: results[0],
+          intentions: results[1] ? results[1] : [],
+          loading: false
+        }, () => {
+          this.findCurrentItems();
+        });
       })
       .catch(error => this.props.utils.showError(error.message));
   }
@@ -96,6 +105,8 @@ class Today extends React.Component {
   }
 
   findCurrentItems() {
+    if(!this.state.events) return;
+
     const currentDate = new Date();
     const currentItem = this.findCurrentItem(currentDate);
     const nextItem = this.findNextItem(currentItem, currentDate);
@@ -128,7 +139,7 @@ class Today extends React.Component {
   getIntentions() {
     const intentions = this.state.intentions;
 
-    if(intentions.length === 0) return;
+    if(!intentions || intentions.length === 0) return;
 
     return <div>
       <h3>Having trouble?</h3>
@@ -153,7 +164,7 @@ class Today extends React.Component {
         Your day
       </h2>
       <h4>
-        Breathe in, Breathe out. Repeat.
+        {this.state.quote.text} <em>({this.state.quote.author})</em>
       </h4>
       <h3>
         It's <span className="TodayCurrentTime">{this.state.currentTime}</span>. Right now, you've planned to do:

@@ -142,6 +142,9 @@ class ModalImplementationIntentions extends React.Component {
 
       case "day":
         return this.setIntentionsForDay();
+
+      default:
+        return;
     }
   }
 
