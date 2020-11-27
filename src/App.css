@@ -510,3 +510,23 @@ body * {
   margin: 32px 0 0 0;
   text-align: center;
 }
+
+.SearchFilter {
+  align-items: center;
+  display: flex;
+}
+
+.SearchFilter .input-component {
+  width: 90%;
+}
+
+.SearchFilter button {
+  margin: 0 0 0 8px;
+}
+
+.FilterMenu {
+  background: #FFF;
+  border-radius: 16px;
+  box-shadow: 0.0px 4.0px 8.0px 0 rgba(0, 0, 0, 0.2);
+  padding: 15px 20px;
+}

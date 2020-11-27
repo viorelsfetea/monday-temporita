@@ -51,6 +51,9 @@ class ItemsDao {
               items {
                 id
                 name
+                subscribers {
+                  id
+                }
               }
           }
         }
@@ -65,11 +68,7 @@ class ItemsDao {
   }
 
   includeBoard(board) {
-    if(board.name.indexOf("Subitems") !== -1) {
-      return false;
-    }
-
-    return true;
+    return board.name.indexOf("Subitems") === -1;
   }
 }
 

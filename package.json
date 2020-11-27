@@ -20,7 +20,7 @@
     "react-dom": "^16.13.0",
     "react-scripts": "3.4.0",
     "bootstrap": "^4.5",
-    "monday-ui-react-core": "^0.0",
+    "monday-ui-react-core": "^0.0.30",
     "moment": "^2.29",
     "react-big-calendar": "^0",
     "react-modal": "^3.11",

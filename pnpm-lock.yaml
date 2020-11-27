@@ -6,7 +6,7 @@ dependencies:
   bootstrap: 4.5.3
   moment: 2.29.1
   monday-sdk-js: 0.1.1
-  monday-ui-react-core: 0.0.19_react-dom@16.14.0+react@16.14.0
+  monday-ui-react-core: 0.0.30_react-dom@16.14.0+react@16.14.0
   node-sass: 4.14.1
   react: 16.14.0
   react-big-calendar: 0.28.6_react-dom@16.14.0+react@16.14.0
@@ -8734,13 +8734,13 @@ packages:
     dev: false
     resolution:
       integrity: sha512-DRReEAl2Ib/z6hXhl353pjEyAJpZ9HkXhbxuw91DmqInjU3uwSddP/kASzMU3unHEk4SKi5GDYj/sPgXQwcKiA==
-  /monday-ui-react-core/0.0.19_react-dom@16.14.0+react@16.14.0:
+  /monday-ui-react-core/0.0.30_react-dom@16.14.0+react@16.14.0:
     dependencies:
       '@popperjs/core': 2.5.4
       '@react-hook/merged-ref': 1.3.0_react@16.14.0
       classnames: 2.2.6
       lodash: 4.17.20
-      monday-ui-style: 0.0.14_prop-types@15.7.2+react@16.14.0
+      monday-ui-style: 0.0.18_prop-types@15.7.2+react@16.14.0
       prop-types: 15.7.2
       react: 16.14.0
       react-dom: 16.14.0_react@16.14.0
@@ -8752,8 +8752,8 @@ packages:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
     resolution:
-      integrity: sha512-rMU/kWuUSdpK/4cU+MXJjtH0TknjdezumckZwWlIKzDqEeACv9ZULNaoPdxzg3tLiXngjSz/s9txDlcj2q6SqQ==
-  /monday-ui-style/0.0.14_prop-types@15.7.2+react@16.14.0:
+      integrity: sha512-LS7olVxgnglFsx9G7idR2FHsngKRFSh8iUbp0W0Pgys+B3E0NHk3Vhi+xhmx68LcjQvEee367VW2eCWOtfIGMg==
+  /monday-ui-style/0.0.18_prop-types@15.7.2+react@16.14.0:
     dependencies:
       prop-types: 15.7.2
       react: 16.14.0
@@ -8762,7 +8762,7 @@ packages:
       prop-types: ^15.7.2
       react: '>=16.9.0'
     resolution:
-      integrity: sha512-K5w4AQHwJ7nQuqmHTHYmtXOCVXtY8Nyrz+RDqGb502p6RnTvXFkReQ733runK/RayYUXa8L4xR+y27YUybOULQ==
+      integrity: sha512-6I8InTgHbFvwjQ+3weYlnNtgwZQRGZSAUiK3MCsFBMImFTMYi7cK4L9yxNMGh+zmAuKOIeWBNNhshk7E/I1MqA==
   /move-concurrently/1.0.1:
     dependencies:
       aproba: 1.2.0
@@ -13559,7 +13559,7 @@ specifiers:
   cross-port-killer: ^1.2.1
   moment: ^2.29
   monday-sdk-js: ^0.1.1
-  monday-ui-react-core: ^0.0
+  monday-ui-react-core: ^0.0.30
   node-sass: ^4.0.0
   react: ^16.13.0
   react-big-calendar: ^0

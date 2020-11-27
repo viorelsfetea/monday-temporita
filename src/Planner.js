@@ -57,6 +57,7 @@ class Planner extends React.Component {
           <div className="col-3 sidebar">
             <BoardList 
               monday={this.monday}
+              user={this.props.user}
               itemHandler={this.itemHandler}
               boards={boards} 
               draggable={true}
