@@ -25,9 +25,10 @@ class Item extends React.Component {
 
     return <div className="ItemWrapper">
           <div className="Item" onClick={() => this.props.onItemClick(item)} draggable={this.props.draggable ? this.props.draggable : false} onDragStart={this.onDragStart.bind(this)}>
-            <div className="ItemColor" style={{background: (this.props.color)}}></div>
+            <div className="ItemColor" style={{background: (this.props.color)}}>&nbsp;</div>
             <h5>{this.props.item.name}</h5>
           </div>
+          {this.props.columns ? this.props.columns.map(column => <div className="ItemColumn" style={{width: column.width}}>{column.text}</div>) : ""}
         </div>
   }
 

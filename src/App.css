@@ -32,7 +32,9 @@ body * {
 }
 
 .ItemWrapper {
+  align-items: center;
   border-bottom: 1px solid #FFF;
+  display: flex;
 }
 
 .Item {
@@ -44,6 +46,17 @@ body * {
   height: 36px;
   line-height: 36px;
   width: 100%;
+}
+
+.ItemColumn {
+  background: rgb(245, 246, 248);
+  border-bottom: 1px solid rgb(230, 233, 239);
+  border-left: 1px solid rgb(230, 233, 239);
+  color: rgb(50, 51, 56);
+  font-size: 13px;
+  height: 36px;
+  line-height: 36px;
+  text-align: center;
 }
 
 .Item .ItemColor {
@@ -227,7 +240,7 @@ body * {
 
 .rbc-event {
   background: #F5F6F8;
-  box-shadow: 0.0px 4.0px 8.0px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: 0.0px 4.0px 8.0px 0 rgba(0, 0, 0, 0.2);
   border: 1px solid #EEE !important;
   border-radius: 8px;
   padding: 0;
@@ -315,23 +328,25 @@ body * {
  text-decoration: none;
 }
 
-.TemporitaToday h2, .TemporitaToday h3, .TemporitaToday h4 {
+.TemporitaToday h2, .TemporitaToday h3, .TemporitaToday h4,
+.Reports h2, .Reports h3, .Reports h4 {
+  text-align: center;
   width: 100%;
 }
 
-.TemporitaToday h2 {
+.TemporitaToday h2, .Reports h2{
   color: #323338;
   font-size: 32px;
   font-weight: 500;
 }
 
-.TemporitaToday h3 {
+.TemporitaToday h3, .Reports h3 {
   font-size: 24px;
   font-weight: 700;
   margin-top: 32px;
 }
 
-.TemporitaToday h4 {
+.TemporitaToday h4, .Reports h4 {
   color: #676879;
   font-size: 18px;
   font-weight: 500;
@@ -431,4 +446,38 @@ body * {
   margin: 16px auto;
   text-align: left;
   width: 40%;
+}
+
+.ReportsWeekNavigator {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  margin: 64px auto 0;
+  width: 50%;
+}
+
+.ReportsWeekNavigator button {
+  margin: 0 16px;
+}
+
+.ReportsProgressBar {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.ReportsProgressBar .TemporitaProgressBar {
+  margin: 0 16px 0 64px;
+  width: 30%;
+}
+
+.ReportsItems {
+  margin: 32px auto;
+  width: 40%;
+}
+
+.ReportsItems h4 {
+  margin: 16px 0 8px;
+  text-align: left;
 }

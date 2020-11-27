@@ -8,6 +8,8 @@ import NavigationChevronLeft from "monday-ui-react-core/dist/icons/NavigationChe
 import NavigationChevronRight from "monday-ui-react-core/dist/icons/NavigationChevronRight";
 import moment from "moment";
 import Preloader from "./Preloader";
+import Item from "./Item";
+import BoardIcon from "monday-ui-react-core/dist/icons/Board";
 
 class Reports extends React.Component {
   constructor(props) {
@@ -102,7 +104,7 @@ class Reports extends React.Component {
 
         this.setEvents(events);
       })
-      .catch(error => this.props.utils.showError("Could not retrieve the events for this week"));
+      .catch(() => this.props.utils.showError("Could not retrieve the events for this week"));
   }
 
   setEvents(events) {
@@ -112,18 +114,22 @@ class Reports extends React.Component {
     events.forEach(event => {
       const timeSpent = this.getMinutesBetweenDates(new Date(event.start), new Date(event.end));
 
-      if(!groupedEvents.hasOwnProperty(event.monday_id)) {
-        groupedEvents[event.monday_id] = {
+      if(!groupedEvents.hasOwnProperty(event.board)) {
+        groupedEvents[event.board] = {}
+      }
+      
+      if(!groupedEvents[event.board].hasOwnProperty(event.monday_id)) {
+        groupedEvents[event.board][event.monday_id] = {
           event: {
             id: event.monday_id,
-            title: event.title,
+            name: event.title,
             color: event.color,
             board: event.board
           },
           total: timeSpent
         };
       } else {
-        groupedEvents[event.monday_id]["total"] += timeSpent;
+        groupedEvents[event.board][event.monday_id]["total"] += timeSpent;
       }
 
       totalMinutes += timeSpent;
@@ -148,15 +154,49 @@ class Reports extends React.Component {
     }
 
     if(minutes > 0) {
-      result += `${minutes}m`;
+      if(result) {
+        result += `${minutes}m`;
+      } else {
+        result = `${minutes}m`;
+      }
+    }
+
+    if(!result) {
+      result = '0h';
     }
 
     return result;
   }
 
-  getItem(id, event) {
-    return <div style={{background: event.color}} key={id}>
-      {event.event.board}: {event.event.title} - {this.getFormattedTime(event.total)}
+  getBoard(id, board) {
+   let totalMinutesInBoard = 0;
+   let items = [];
+   
+   Object.keys(board).forEach(key => {
+     const item = board[key];
+     
+     totalMinutesInBoard += item.total;
+
+     item.event.total = item.total;
+     items.push(item.event);
+   });
+   
+   return <div key={id}>
+     <h4><BoardIcon /> {id} - {this.getFormattedTime(totalMinutesInBoard)}</h4>
+     {items.map(item => this.getItem(item))}
+   </div>
+  }
+  
+  getItem(item) {
+    return <div key={item.id}>
+      <Item
+        draggable={false}
+        item={item}
+        color={item.color}
+        onItemClick={this.props.itemHandler.openItem.bind(this.props.itemHandler)}
+        columns={[{text: this.getFormattedTime(item.total), width: "80px"}]}
+        key={item.id}
+      />
     </div>;
   }
 
@@ -192,7 +232,9 @@ class Reports extends React.Component {
     return <div>
       {this.getProgressBar()}
 
-      {this.state.events ? Object.keys(this.state.events).map(key => this.getItem(key, this.state.events[key])) : ""}
+      <div className="ReportsItems">
+        {this.state.events && Object.keys(this.state.events).length > 0 ? Object.keys(this.state.events).map(key => this.getBoard(key, this.state.events[key])) : <div className="ReportsNoItems">You didn't plan anything in this particular week.</div> }
+      </div>
     </div>
   }
 
