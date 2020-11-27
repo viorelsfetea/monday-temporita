@@ -497,3 +497,12 @@ body * {
   margin: 16px 0 8px;
   text-align: left;
 }
+
+.ReportsNoItems {
+  text-align: center;
+}
+
+.ReportsDownloadButton {
+  margin: 32px 0 0 0;
+  text-align: center;
+}

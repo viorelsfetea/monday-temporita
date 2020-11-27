@@ -6,10 +6,12 @@ import LinearProgressBar from "monday-ui-react-core/dist/LinearProgressBar";
 import Button from "monday-ui-react-core/dist/Button";
 import NavigationChevronLeft from "monday-ui-react-core/dist/icons/NavigationChevronLeft";
 import NavigationChevronRight from "monday-ui-react-core/dist/icons/NavigationChevronRight";
+import Download from "monday-ui-react-core/dist/icons/Download";
 import moment from "moment";
 import Preloader from "./Preloader";
 import Item from "./Item";
 import BoardIcon from "monday-ui-react-core/dist/icons/Board";
+import zipcelx from 'zipcelx';
 
 class Reports extends React.Component {
   constructor(props) {
@@ -168,6 +170,67 @@ class Reports extends React.Component {
     return result;
   }
 
+  downloadEvents() {
+    const config = {
+      filename: `temporita ${this.getLabel()}`,
+      sheet: {
+        data: [
+          [{
+            value: 'Board',
+            type: 'string'
+          }, {
+            value: 'Task',
+            type: 'string'
+          }, {
+            value: 'Time spent (total)',
+            type: 'string'
+          }, {
+            value: 'Time spent (minutes)',
+            type: 'string'
+          }]
+        ]
+      }
+    };
+
+    Object.keys(this.state.events).forEach(board => {
+      Object.keys(this.state.events[board]).forEach(event => {
+        const item = this.state.events[board][event];
+
+        config.sheet.data.push([
+          {
+            value: board,
+            type: 'string'
+          },
+          {
+            value: item.event.name,
+            type: 'string'
+          },
+          {
+            value: this.getFormattedTime(item.total),
+            type: 'string'
+          },
+          {
+            value: item.total,
+            type: 'number'
+          }
+        ])
+      });
+    })
+    zipcelx(config);
+  }
+
+  getBoards() {
+    return <div>
+      {Object.keys(this.state.events).map(key => this.getBoard(key, this.state.events[key]))}
+
+      <div className="ReportsDownloadButton">
+        <Button size={Button.sizes.LARGE} kind={Button.kinds.TERTIARY} onClick={() => this.downloadEvents()}>
+          <Download /> Download
+        </Button>
+      </div>
+    </div>
+  }
+
   getBoard(id, board) {
    let totalMinutesInBoard = 0;
    let items = [];
@@ -234,7 +297,7 @@ class Reports extends React.Component {
       {this.getProgressBar()}
 
       <div className="ReportsItems">
-        {this.state.events && Object.keys(this.state.events).length > 0 ? Object.keys(this.state.events).map(key => this.getBoard(key, this.state.events[key])) : <div className="ReportsNoItems">You didn't plan anything in this particular week.</div> }
+        {this.state.events && Object.keys(this.state.events).length > 0 ? this.getBoards() : <div className="ReportsNoItems">You didn't plan anything in this particular week.</div> }
       </div>
     </div>
   }
