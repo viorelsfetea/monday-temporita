@@ -196,6 +196,7 @@ class Reports extends React.Component {
         onItemClick={this.props.itemHandler.openItem.bind(this.props.itemHandler)}
         columns={[{text: this.getFormattedTime(item.total), width: "80px"}]}
         key={item.id}
+        onUpdatesClick={this.props.itemHandler.openUpdates.bind(this.props.itemHandler)}
       />
     </div>;
   }

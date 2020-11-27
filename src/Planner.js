@@ -14,7 +14,6 @@ import "monday-ui-react-core/dist/main.css"
 import Utils from "./libs/Utils";
 import Menu from "./partials/Menu";
 
-
 const localizer = momentLocalizer(moment) // or globalizeLocalizer
 
 class Planner extends React.Component {
@@ -63,6 +62,7 @@ class Planner extends React.Component {
               draggable={true}
               key={boardsKey}
               onItemClick={this.itemHandler.openItem}
+              onUpdatesClick={this.props.itemHandler.openUpdates.bind(this.props.itemHandler)}
             />
           </div>
 

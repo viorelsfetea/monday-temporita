@@ -44,7 +44,13 @@ class Today extends React.Component {
 
   getItem(item) {
     return <div>
-      <Item draggable={false} item={item} color={item.color} onItemClick={this.props.itemHandler.openItem.bind(this.props.itemHandler)} />
+      <Item
+        draggable={false}
+        item={item}
+        color={item.color}
+        onItemClick={this.props.itemHandler.openItem.bind(this.props.itemHandler)}
+        onUpdatesClick={this.props.itemHandler.openUpdates.bind(this.props.itemHandler)}
+      />
       <div className="TodayItemTime">{moment(item.start).format(this.getTimeFormat())} - {moment(item.end).format(this.getTimeFormat())}</div>
     </div>;
   }

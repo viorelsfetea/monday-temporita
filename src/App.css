@@ -48,6 +48,22 @@ body * {
   width: 100%;
 }
 
+.ItemUpdates {
+  background: transparent;
+  border: 0;
+  color: #e6e9ef;
+  margin-left: auto;
+}
+
+.ItemUpdates:hover {
+  color: #0071d9;
+}
+
+.ItemUpdates svg {
+  height: 36px;
+  width: 24px;
+}
+
 .ItemColumn {
   background: rgb(245, 246, 248);
   border-bottom: 1px solid rgb(230, 233, 239);

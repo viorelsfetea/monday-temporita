@@ -16,6 +16,11 @@ class ItemHandler {
   openItem(item) {
     this.monday.execute('openItemCard', { itemId: item.id, kind: "columns" });
   }
+  
+  openUpdates(event, item) {
+    event.stopPropagation();
+    this.monday.execute('openItemCard', { itemId: item.id, kind: "updates" });
+  }
 
   addEvent(event) {
     this.events.push(event);

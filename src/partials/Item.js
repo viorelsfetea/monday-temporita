@@ -1,5 +1,6 @@
 import React from "react";
 import Tooltip from "monday-ui-react-core/dist/Tooltip";
+import Update from "monday-ui-react-core/dist/icons/Update";
 
 class Item extends React.Component {
   constructor(props) {
@@ -19,6 +20,14 @@ class Item extends React.Component {
     });
   }
 
+  getUpdatesButton(item) {
+    if(!this.props.onUpdatesClick) return "";
+
+    return <button className="ItemUpdates" onClick={(event) => this.props.onUpdatesClick(event, item)}>
+      <Update />
+    </button>
+  }
+
   getItemRender() {
     const item = this.props.item;
     item.board = this.props.boardName;
@@ -27,6 +36,7 @@ class Item extends React.Component {
           <div className="Item" onClick={() => this.props.onItemClick(item)} draggable={this.props.draggable ? this.props.draggable : false} onDragStart={this.onDragStart.bind(this)}>
             <div className="ItemColor" style={{background: (this.props.color)}}>&nbsp;</div>
             <h5>{this.props.item.name}</h5>
+            {this.getUpdatesButton(item)}
           </div>
           {this.props.columns ? this.props.columns.map(column => <div className="ItemColumn" style={{width: column.width}}>{column.text}</div>) : ""}
         </div>
