@@ -12,17 +12,17 @@ class Menu extends React.Component {
     this.props.history.push(path);
   };
 
-  isCurrentPath(path) {
-    return this.props.location.pathname === path;
+  isCurrentPath(path, isHomePath) {
+    return (isHomePath && this.props.location.pathname === "/") || this.props.location.pathname === path;
   }
 
-  getButton(title, path, icon) {
+  getButton(title, path, icon, isHomePath) {
     return <Tooltip
       showDelay={300}
       content={title}
       containerSelector="body"
     >
-      <Button size={Button.sizes.SMALL} kind={Button.kinds.TERTIARY} onClick={() => this.goTo(path)} active={this.isCurrentPath(path)}>
+      <Button size={Button.sizes.SMALL} kind={Button.kinds.TERTIARY} onClick={() => this.goTo(path)} active={this.isCurrentPath(path, isHomePath)}>
         {icon}
       </Button>
     </Tooltip>
@@ -30,10 +30,10 @@ class Menu extends React.Component {
 
   render() {
     return <div className="MenuButtons">
-      {this.getButton("Your day", "/today", <Home />)}
-      {this.getButton("Planner", "/planner", <Calendar />)}
-      {this.getButton("Reports", "/reports", <Dashboard />)}
-      {this.getButton("What are other people working on?", "/others", <Person />)}
+      {this.getButton("Your day", "/today", <Home />, true)}
+      {this.getButton("Planner", "/planner", <Calendar />, false)}
+      {this.getButton("Reports", "/reports", <Dashboard />, false)}
+      {this.getButton("What are other people working on?", "/others", <Person />, false)}
     </div>
   }
 }

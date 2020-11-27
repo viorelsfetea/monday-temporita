@@ -83,7 +83,8 @@ class TemporitaCalendar extends React.Component {
       start,
       end,
       allDay: allDay,
-      color: draggedEvent.color
+      color: draggedEvent.color,
+      board: draggedEvent.board
     }
 
     this.setState({ draggedEvent: null })
@@ -126,7 +127,8 @@ class TemporitaCalendar extends React.Component {
       title: item.name,
       start: this.selectedTimes.start,
       end: this.selectedTimes.end,
-      color: item.color
+      color: item.color,
+      board: item.board
     });
 
     this.setState({boardListModalIsOpen: false});
@@ -140,7 +142,8 @@ class TemporitaCalendar extends React.Component {
       allDay: event.allDay,
       start: event.start,
       end: event.end,
-      color: event.color
+      color: event.color,
+      board: event.board
     }
    
     this.updateEvents(this.state.events.concat([hour]));

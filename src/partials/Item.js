@@ -14,13 +14,17 @@ class Item extends React.Component {
     this.props.itemHandler.setDraggedItem({
       id: this.props.item.id,
       title: this.props.item.name,
-      color: this.props.color
+      color: this.props.color,
+      board: this.props.boardName
     });
   }
 
   getItemRender() {
+    const item = this.props.item;
+    item.board = this.props.boardName;
+
     return <div className="ItemWrapper">
-          <div className="Item" onClick={() => this.props.onItemClick(this.props.item)} draggable={this.props.draggable ? this.props.draggable : false} onDragStart={this.onDragStart.bind(this)}>
+          <div className="Item" onClick={() => this.props.onItemClick(item)} draggable={this.props.draggable ? this.props.draggable : false} onDragStart={this.onDragStart.bind(this)}>
             <div className="ItemColor" style={{background: (this.props.color)}}></div>
             <h5>{this.props.item.name}</h5>
           </div>

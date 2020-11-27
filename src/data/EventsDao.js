@@ -144,6 +144,12 @@ class EventsDao {
     return this.getExistingEvents(eventKey, ignoreCache);
   }
 
+  getDayEvents(user, date, ignoreCache) {
+    const eventKey = this.getKey(user, date);
+
+    return this.getExistingEvents(eventKey, ignoreCache);
+  }
+
   getKey(user, date) {
     return `event-${user.id}-${this.formatDate(date)}`
   }

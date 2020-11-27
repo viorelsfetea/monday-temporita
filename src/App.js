@@ -8,6 +8,7 @@ import mondaySdk from "monday-sdk-js";
 import Utils from "./libs/Utils";
 import Preloader from "./partials/Preloader";
 import UsersDao from "./data/UsersDao";
+import Reports from "./partials/Reports";
 
 class App extends React.Component {
   constructor() {
@@ -20,19 +21,21 @@ class App extends React.Component {
 
     this.state = {
       loading: true,
+      user: null,
       settings: {
         time_format: "24h",
         weekends: false,
         dayStart: "9",
         dayEnd: "17",
-        hoursInDay: "8"
+        hoursInDay: "8",
+        hoursInWeek: "40"
       }
     };
   }
 
   componentDidMount() {
     this.monday.listen("settings", res => {
-      this.setState({ settings: res.data, settingsHash: Utils.hashObject(res.data), loading: false});
+      this.setState({ settings: res.data, settingsHash: Utils.hashObject(res.data)});
     });
 
     this.monday.listen("context", res => {
@@ -58,6 +61,7 @@ class App extends React.Component {
       <Route exact={true} path="/today" component={(props) => <Today {...props} user={this.state.user} itemHandler={this.itemHandler} monday={this.monday} settings={this.state.settings} utils={this.utils}/>} />
       <Route exact={true} path="/planner" component={(props) => <Planner {...props} user={this.state.user} itemHandler={this.itemHandler} monday={this.monday} settings={this.state.settings} utils={this.utils} />} />
       <Route exact={true} path="/others" component={(props) => <Others {...props} user={this.state.user} itemHandler={this.itemHandler} monday={this.monday} settings={this.state.settings} utils={this.utils} usersDao={this.usersDao} />} />
+      <Route exact={true} path="/reports" component={(props) => <Reports {...props} user={this.state.user} itemHandler={this.itemHandler} monday={this.monday} settings={this.state.settings} utils={this.utils} usersDao={this.usersDao} />} />
     </BrowserRouter>
   }
 }
