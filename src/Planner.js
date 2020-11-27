@@ -12,6 +12,7 @@ import "./assets/fontawesome/css/all.min.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "monday-ui-react-core/dist/main.css"
 import Utils from "./libs/Utils";
+import Menu from "./partials/Menu";
 
 
 const localizer = momentLocalizer(moment) // or globalizeLocalizer
@@ -51,7 +52,9 @@ class Planner extends React.Component {
     }
 
     return <div className="App container-fluid">
-        <div className="row">
+      <Menu history={this.props.history} location={this.props.location} />
+
+      <div className="row">
           <div className="col-3 sidebar">
             <BoardList 
               monday={this.monday}

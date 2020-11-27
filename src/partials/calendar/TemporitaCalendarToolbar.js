@@ -4,7 +4,6 @@ import Button from "monday-ui-react-core/dist/Button";
 import NavigationChevronLeft from "monday-ui-react-core/dist/icons/NavigationChevronLeft";
 import NavigationChevronRight from "monday-ui-react-core/dist/icons/NavigationChevronRight";
 import LinearProgressBar from "monday-ui-react-core/dist/LinearProgressBar";
-import {Link} from "react-router-dom";
 import Sun from "monday-ui-react-core/dist/icons/Sun";
 import Tooltip from "monday-ui-react-core/dist/Tooltip";
 
@@ -64,7 +63,6 @@ class TemporitaCalendarToolbar extends React.Component {
     if(this.props.view !== "day") return;
 
     return <div className="PlanningProgressBar">
-      <Link to="/today">Today</Link>
       <LinearProgressBar
         value={this.props.totalPlanned}
         animated={true}

@@ -409,3 +409,26 @@ body * {
 .SelectorContainer .jss19 {
   font-size: 18px;
 }
+
+.MenuButtons {
+  margin: 8px 0;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+}
+
+.MenuButtons .monday-style-button {
+  margin: 0 8px 0 0;
+}
+
+.SelectUserPhoto {
+  border-radius: 16px;
+  height: 32px;
+  margin: 0 8px 0 0;
+}
+
+.SelectorUsers {
+  margin: 16px auto;
+  text-align: left;
+  width: 40%;
+}

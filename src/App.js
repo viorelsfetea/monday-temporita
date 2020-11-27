@@ -1,12 +1,13 @@
 import React from "react";
 import { BrowserRouter, Route } from "react-router-dom";
+import Others from "./Others";
 import Planner from "./Planner";
 import Today from "./Today";
 import ItemHandler from "./libs/ItemHandler";
 import mondaySdk from "monday-sdk-js";
 import Utils from "./libs/Utils";
 import Preloader from "./partials/Preloader";
-import UsersDao from "./data/UserDao";
+import UsersDao from "./data/UsersDao";
 
 class App extends React.Component {
   constructor() {
@@ -53,9 +54,10 @@ class App extends React.Component {
     }
 
     return <BrowserRouter>
-      <Route exact={true} path="/" component={() => <Today user={this.state.user} itemHandler={this.itemHandler} monday={this.monday} settings={this.state.settings} utils={this.utils} />} />
-      <Route exact={true} path="/today" component={() => <Today user={this.state.user} itemHandler={this.itemHandler} monday={this.monday} settings={this.state.settings} utils={this.utils}/>} />
-      <Route exact={true} path="/planner" component={() => <Planner user={this.state.user} itemHandler={this.itemHandler} monday={this.monday} settings={this.state.settings} utils={this.utils} />} />
+      <Route exact={true} path="/" component={(props) => <Today {...props} user={this.state.user} itemHandler={this.itemHandler} monday={this.monday} settings={this.state.settings} utils={this.utils} />} />
+      <Route exact={true} path="/today" component={(props) => <Today {...props} user={this.state.user} itemHandler={this.itemHandler} monday={this.monday} settings={this.state.settings} utils={this.utils}/>} />
+      <Route exact={true} path="/planner" component={(props) => <Planner {...props} user={this.state.user} itemHandler={this.itemHandler} monday={this.monday} settings={this.state.settings} utils={this.utils} />} />
+      <Route exact={true} path="/others" component={(props) => <Others {...props} user={this.state.user} itemHandler={this.itemHandler} monday={this.monday} settings={this.state.settings} utils={this.utils} usersDao={this.usersDao} />} />
     </BrowserRouter>
   }
 }

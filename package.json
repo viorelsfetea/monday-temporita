@@ -27,7 +27,8 @@
     "node-sass": "^4.0.0",
     "react-router-dom": "^5.2.0",
     "@kenshooui/react-multi-select": "^1.1.6",
-    "uuid": "^8.3.1"
+    "uuid": "^8.3.1",
+    "react-select": "^3.1.1"
   },
   "eslintConfig": {
     "extends": "react-app"

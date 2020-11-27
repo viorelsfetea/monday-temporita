@@ -138,23 +138,25 @@ class EventsDao {
     });
   }
 
-  getTodayEvents(user) {
+  getTodayEvents(user, ignoreCache) {
     const eventKey = this.getKey(user, new Date());
 
-    return this.getExistingEvents(eventKey);
+    return this.getExistingEvents(eventKey, ignoreCache);
   }
 
   getKey(user, date) {
     return `event-${user.id}-${this.formatDate(date)}`
   }
 
-  getExistingEvents(eventKey) {
+  getExistingEvents(eventKey, ignoreCache) {
     return new Promise((resolve, reject) => {
-      const cached = Cache.read(eventKey);
+      if(!ignoreCache) {
+        const cached = Cache.read(eventKey);
 
-      if(cached) {
-        resolve(cached);
-        return;
+        if(cached) {
+          resolve(cached);
+          return;
+        }
       }
 
       this.monday.storage.instance.getItem(eventKey)

@@ -1,40 +1,71 @@
 import React from "react";
+import Select from "react-select";
 import {Link} from "react-router-dom";
 import Item from "./partials/Item";
 import Preloader from "./partials/Preloader";
 import moment from 'moment'
 import EventsDao from "./data/EventsDao";
-import ImplementationIntentionsDao from "./data/ImplementationIntentionsDao";
-import Quote from "./partials/Quote";
 import Menu from "./partials/Menu";
 
-class Today extends React.Component {
+class Others extends React.Component {
   constructor(props) {
     super(props);
 
-    const quote = new Quote();
-
     this.state = {
+      user: null,
+      users: [],
+      selectorUsers: [],
       events: [],
-      intentions: [],
       loading: true,
-      currentItem: null,
-      quote: quote.getRandom()
+      loadingUser: false,
+      currentItem: null
     }
     
     this.eventsDao = new EventsDao(props.monday, props.utils);
-    this.intentionsDao = new ImplementationIntentionsDao(props.monday);
   }
-  
+
+  componentDidMount() {
+    this.getItems();
+    this.updateTime();
+  }
+
+  selectUser(user) {
+    this.setState({
+      user: this.state.users.find(item => item.id === user.value),
+      loadingUser: true
+    }, () => {
+      this.getEventsForUser();
+    })
+  }
+
   getItems() {
     if(!this.props.user) return;
 
-    Promise.all([this.eventsDao.getTodayEvents(this.props.user), this.intentionsDao.getImplementationsForDay(this.props.user, new Date())])
+    this.props.usersDao.getOtherUsers()
+      .then(results => {
+        const users = results.users
+          .sort((userA, userB) => userA.name.localeCompare(userB.name));
+
+        this.setState({
+          users,
+          selectorUsers: users.map(user => {
+              return {
+                value: user.id,
+                label: <span><img src={user.photo_thumb} alt={user.name} className="SelectUserPhoto"/>{user.name}</span>
+              }
+            }),
+          loading: false
+        });
+      })
+      .catch(error => this.props.utils.showError(error.message));
+  }
+
+  getEventsForUser() {
+    this.eventsDao.getTodayEvents(this.state.user, true)
       .then(results => {
         this.setState({
-          events: results[0],
-          intentions: results[1] ? results[1] : [],
-          loading: false
+          events: results,
+          loadingUser: false
         }, () => {
           this.findCurrentItems();
         });
@@ -112,78 +143,59 @@ class Today extends React.Component {
     const currentItem = this.findCurrentItem(currentDate);
     const nextItem = this.findNextItem(currentItem, currentDate);
 
-    if(currentItem !== null) {
-      this.findIntentionsForItem(currentItem);
-    }
-
     this.setState({
       currentItem, nextItem,
       nextCalculationTime: currentItem ? new Date(currentItem.end) : undefined
     });
   }
 
-  findIntentionsForItem(event) {
-    event["monday_id"] = event.id;
-    this.intentionsDao.getImplementationsForItem(this.props.user, event)
-      .then(intentions => {
-        if(!intentions) return;
-        this.setState({intentions: this.state.intentions.concat(intentions)});
-      })
-      .catch(error => this.props.utils.showError(error.message));
-  }
-  
-  componentDidMount() {
-    this.getItems();
-    this.updateTime();
-  }
-
-  getIntentions() {
-    const intentions = this.state.intentions;
-
-    if(!intentions || intentions.length === 0) return;
-
-    return <div>
-      <h3>Having trouble?</h3>
-      <h4>Don't sweat it. You've planned for it!</h4>
-      {intentions.map(intention =>
-        <div>If <strong><em>{intention.situation}</em></strong> then <strong><em>{intention.action}</em></strong></div>
-      )}
-    </div>
-
-  }
-
-  render() {
+  getPlan() {
     const {currentItem, nextItem} = this.state;
 
-    if(this.state.loading) {
-      return <Preloader />
-    }
+    if(!this.state.user) return "";
 
-    return <div className="TemporitaToday">
-      <Menu history={this.props.history} location={this.props.location} />
-      <h2>
-        Your day
-      </h2>
-      <h4>
-        {this.state.quote.text} <em>({this.state.quote.author})</em>
-      </h4>
+    if(this.state.loadingUser) return <div style={{height: '100px', margin: '0 auto', position: 'relative'}}><Preloader /></div>
+
+    return <div>
       <h3>
-        It's <span className="TodayCurrentTime">{this.state.currentTime}</span>. Right now, you've planned to do:
+        It's <span className="TodayCurrentTime">{this.state.currentTime}</span>. Right now, {this.state.user.name} has planned to do:
       </h3>
 
       { currentItem ? this.getItem(currentItem) : "" }
-      { !currentItem ? <div className="TodayNoItemSet">There's nothing planned right now. Relax or <Link to="/planner">plan something.</Link></div> : "" }
-
-      {this.getIntentions()}
+      { !currentItem ? <div className="TodayNoItemSet">There's nothing planned right now.</div> : "" }
 
       <h3>
         Coming up:
       </h3>
       { nextItem ? this.getItem(nextItem) : "" }
-      { !nextItem ? <div className="TodayNoItemSet">That was it. You've finished everything. Go you!</div> : "" }
+      { !nextItem ? <div className="TodayNoItemSet">Nothing planned ahead</div> : "" }
+    </div>
+  }
 
+  render() {
+    if(this.state.loading) {
+      return <Preloader />
+    }
+
+    return <div className="TemporitaToday TemporitaOthers">
+      <Menu history={this.props.history} location={this.props.location} />
+      <h2>
+        What other people are doing
+      </h2>
+      <div className="SelectorUsers">
+        <Select
+          placeholder="Click here to select someone"
+          className="basic-single"
+          classNamePrefix="select"
+          isSearchable={true}
+          name="users"
+          options={this.state.selectorUsers}
+          onChange={this.selectUser.bind(this)}
+        />
+      </div>
+      {this.getPlan()}
     </div>
   }
 }
 
-export default Today;
+export default Others;
