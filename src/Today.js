@@ -148,9 +148,9 @@ class Today extends React.Component {
 
     if(!intentions || intentions.length === 0) return;
 
-    return <div>
+    return <div className="TodayIntentions">
       <h3>Having trouble?</h3>
-      <h4>Don't sweat it. You've planned for it!</h4>
+      <h4>Don't sweat it. You've planned for this!</h4>
       {intentions.map(intention =>
         <div>If <strong><em>{intention.situation}</em></strong> then <strong><em>{intention.action}</em></strong></div>
       )}
@@ -174,7 +174,7 @@ class Today extends React.Component {
         {this.state.quote.text} <em>({this.state.quote.author})</em>
       </h4>
       <h3>
-        It's <span className="TodayCurrentTime">{this.state.currentTime}</span>. Right now, you've planned to do:
+        Hey there, it's <span className="TodayCurrentTime">{this.state.currentTime}</span>. Right now, you should be focusing on:
       </h3>
 
       { currentItem ? this.getItem(currentItem) : "" }
@@ -183,7 +183,7 @@ class Today extends React.Component {
       {this.getIntentions()}
 
       <h3>
-        Coming up:
+        Next up on your agenda:
       </h3>
       { nextItem ? this.getItem(nextItem) : "" }
       { !nextItem ? <div className="TodayNoItemSet">That was it. You've finished everything. Go you!</div> : "" }

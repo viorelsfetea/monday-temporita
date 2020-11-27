@@ -32,8 +32,8 @@ class Menu extends React.Component {
     return <div className="MenuButtons">
       {this.getButton("Your day", "/today", <Home />, true)}
       {this.getButton("Planner", "/planner", <Calendar />, false)}
-      {this.getButton("Reports", "/reports", <Dashboard />, false)}
       {this.getButton("What are other people working on?", "/others", <Person />, false)}
+      {this.getButton("Reports", "/reports", <Dashboard />, false)}
     </div>
   }
 }
