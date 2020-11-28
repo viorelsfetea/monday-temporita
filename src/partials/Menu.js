@@ -30,6 +30,7 @@ class Menu extends React.Component {
 
   render() {
     return <div className="MenuButtons">
+      <img src="logo.png" alt="Temporita" id="Logo" />
       {this.getButton("Your day", "/today", <Home />, true)}
       {this.getButton("Planner", "/planner", <Calendar />, false)}
       {this.getButton("What are other people working on?", "/others", <Person />, false)}

@@ -453,6 +453,13 @@ body * {
   display: flex;
   align-content: center;
   justify-content: center;
+  position: relative;
+}
+
+#Logo {
+  height: 30px;
+  left: 16px;
+  position: absolute;
 }
 
 .MenuButtons .monday-style-button {
