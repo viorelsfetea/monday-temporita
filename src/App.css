@@ -178,6 +178,8 @@ body * {
 }
 
 .TemporitaCalendarEvent .EventLabel {
+  align-items: center;
+  display: flex;
   padding-right: 8px;
 }
 

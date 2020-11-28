@@ -21,6 +21,9 @@ class ModalBoardList extends React.Component {
           marginRight: '-50%',
           width: '40%',
           transform: 'translate(-50%, -50%)'
+        },
+        overlay: {
+          zIndex: 999
         }
       }}
       contentLabel="Example Modal"
