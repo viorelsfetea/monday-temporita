@@ -156,15 +156,25 @@ class Today extends React.Component {
   }
 
   getIntentions() {
-    const intentions = this.state.intentions;
+    let intentions = this.state.intentions;
+    let ids = [];
 
     if(!intentions || intentions.length === 0) return;
+
+    intentions = intentions.filter(intention => {
+      if(ids.includes(intention.id)) {
+        return false
+      } else {
+        ids.push(intention.id);
+        return true;
+      }
+    });
 
     return <div className="TodayIntentions">
       <h3>Having trouble?</h3>
       <h4>Don't sweat it. You've planned for this!</h4>
       {intentions.map(intention =>
-        <div>If <strong><em>{intention.situation}</em></strong> then <strong><em>{intention.action}</em></strong></div>
+        <div key={intention.id}>If <strong><em>{intention.situation}</em></strong> then <strong><em>{intention.action}</em></strong></div>
       )}
     </div>
 

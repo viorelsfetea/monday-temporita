@@ -31,6 +31,24 @@ class ModalImplementationIntentions extends React.Component {
      selectorIntentionsSelected: [],
      savingIntentions: false
    }
+
+   this.defaultIntentions = [
+     {
+       id: "f56fe2b0-a60c-48fd-bb7c-78a54b93e9db",
+       situation: "the task looks too complicated",
+       action: "I will break large tasks into small, actionable pieces"
+     },
+     {
+       id: "6c0fdadf-05d7-4c3a-a5f4-d35b768a2c37",
+       situation: "I feel like taking a break to check out the news",
+       action: "I will count to 10 before indulging the impulse to procrastinate"
+     },
+     {
+       id: "0a2489e8-0eb1-425b-84e0-77a46e56ae41",
+       situation: "I do not feel like jumping right into it",
+       action: "I will get myself started by committing to work for only 5 minutes"
+     }
+   ]
   }
 
   getTypeKey() {
@@ -54,6 +72,8 @@ class ModalImplementationIntentions extends React.Component {
 
     Promise.all(actions)
       .then(results => {
+        results[0][this.getTypeKey()] = results[0][this.getTypeKey()].concat(this.defaultIntentions);
+
         this.setState({
           loading: false,
           intentions: results[0],
