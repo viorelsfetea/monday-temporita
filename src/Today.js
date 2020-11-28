@@ -1,12 +1,18 @@
 import React from "react";
 import {Link} from "react-router-dom";
+import moment from 'moment'
+import Wand from 'monday-ui-react-core/dist/icons/Wand';
+import Calendar from 'monday-ui-react-core/dist/icons/Calendar'
+import AttentionBox from "monday-ui-react-core/dist/AttentionBox";
+
+import Cache from "./data/Cache";
 import Item from "./partials/Item";
 import Preloader from "./partials/Preloader";
-import moment from 'moment'
 import EventsDao from "./data/EventsDao";
 import ImplementationIntentionsDao from "./data/ImplementationIntentionsDao";
 import Quote from "./partials/Quote";
 import Menu from "./partials/Menu";
+import WelcomeScreen from "./partials/WelcomeScreen";
 
 class Today extends React.Component {
   constructor(props) {
@@ -14,12 +20,18 @@ class Today extends React.Component {
 
     const quote = new Quote();
 
+    const todayDate = new Date();
+
+    this.welcomeScreenKey = `welcome-screen-${todayDate.getDate()}-${todayDate.getMonth()}-${todayDate.getFullYear()}`;
+    const welcomeScreenValue = Cache.read(this.welcomeScreenKey);
+
     this.state = {
       events: [],
       intentions: [],
       loading: true,
       currentItem: null,
-      quote: quote.getRandom()
+      quote: quote.getRandom(),
+      welcomeScreenShown: welcomeScreenValue ? welcomeScreenValue : false
     }
     
     this.eventsDao = new EventsDao(props.monday, props.utils);
@@ -158,21 +170,26 @@ class Today extends React.Component {
 
   }
 
-  render() {
-    const {currentItem, nextItem} = this.state;
+  closeWelcomeScreen() {
+    this.setState({welcomeScreenShown: true});
+    Cache.write(this.welcomeScreenKey, true);
+  }
 
-    if(this.state.loading) {
-      return <Preloader />
+  getContent() {
+    if(this.state.events.length === 0) {
+      return <button className="GoToPlanner" onClick={() => this.props.history.push("/planner")}>
+        <AttentionBox
+          title="Oops… looks like you're starting off with a clean slate"
+          text="Let's fill it up"
+          icon={() => <Calendar />}
+          type={AttentionBox.types.PRIMARY}
+        />
+      </button>
     }
 
-    return <div className="TemporitaToday">
-      <Menu history={this.props.history} location={this.props.location} />
-      <h2>
-        Your day
-      </h2>
-      <h4>
-        {this.state.quote.text} <em>({this.state.quote.author})</em>
-      </h4>
+    const {currentItem, nextItem} = this.state;
+
+    return <div>
       <h3>
         Hey there, it's <span className="TodayCurrentTime">{this.state.currentTime}</span>. Right now, you should be focusing on:
       </h3>
@@ -187,7 +204,28 @@ class Today extends React.Component {
       </h3>
       { nextItem ? this.getItem(nextItem) : "" }
       { !nextItem ? <div className="TodayNoItemSet">That was it. You've finished everything. Go you!</div> : "" }
+    </div>
+  }
 
+  render() {
+    if(!this.state.welcomeScreenShown) {
+      return <WelcomeScreen onClick={() => this.closeWelcomeScreen()} />
+    }
+
+    if(this.state.loading) {
+      return <Preloader />
+    }
+
+    return <div className="TemporitaToday">
+      <Menu history={this.props.history} location={this.props.location} />
+      <h2>
+        Your day
+      </h2>
+      <h4>
+        <Wand /> {this.state.quote.text} <em>({this.state.quote.author})</em>
+      </h4>
+
+      {this.getContent()}
     </div>
   }
 }

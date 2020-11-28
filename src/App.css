@@ -351,24 +351,25 @@ body * {
 }
 
 .TemporitaToday h2, .TemporitaToday h3, .TemporitaToday h4,
-.Reports h2, .Reports h3, .Reports h4 {
+.Reports h2, .Reports h3, .Reports h4,
+.WelcomeScreen h2, .WelcomeScreen h3, .WelcomeScreen h4 {
   text-align: center;
   width: 100%;
 }
 
-.TemporitaToday h2, .Reports h2{
+.TemporitaToday h2, .Reports h2, .WelcomeScreen h2 {
   color: #323338;
   font-size: 32px;
   font-weight: 500;
 }
 
-.TemporitaToday h3, .Reports h3 {
+.TemporitaToday h3, .Reports h3, .WelcomeScreen h3 {
   font-size: 24px;
   font-weight: 700;
   margin-top: 32px;
 }
 
-.TemporitaToday h4, .Reports h4 {
+.TemporitaToday h4, .Reports h4, .WelcomeScreen h4 {
   color: #676879;
   font-size: 18px;
   font-weight: 500;
@@ -531,4 +532,40 @@ body * {
   border-radius: 16px;
   box-shadow: 0.0px 4.0px 8.0px 0 rgba(0, 0, 0, 0.2);
   padding: 15px 20px;
+}
+
+.WelcomeScreen {
+  padding: 64px 0;
+  text-align: center;
+}
+
+.WelcomeScreenCheckItems {
+  margin: 32px auto;
+  text-align: left;
+  width: 40%;
+}
+
+.WelcomeScreenCheckItems h4 {
+  margin: 16px 0;
+}
+
+.WelcomeScreenCheckItems input {
+  height: 16px;
+  margin: 0 8px;
+  vertical-align: middle;
+  width: 16px;
+}
+
+.WelcomeScreenCTA {
+  margin: 16px 0 0 0;
+}
+
+.GoToPlanner {
+  background: none;
+  border: none;
+  margin: 32px 0;
+}
+
+.GoToPlanner .monday-style-attention-box-component--type-primary__text {
+  text-decoration: underline;
 }
