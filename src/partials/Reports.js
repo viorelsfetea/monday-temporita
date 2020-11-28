@@ -311,7 +311,7 @@ class Reports extends React.Component {
           Reports
         </h2>
         <h4>
-          Here is a log of your work. Like a timesheet. To update the logs, go to the <Link to="/planner">Planner</Link> and change the past days.
+          Here is a log of your delivered tasks. Similar to a timesheet. To update the logs, go to the <Link to="/planner">Planner</Link> and edit the past days.
         </h4>
 
         <div className="ReportsWeekNavigator">
