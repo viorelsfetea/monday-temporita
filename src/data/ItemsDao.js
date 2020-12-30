@@ -5,31 +5,46 @@ class ItemsDao {
 
   getItems() {
     return new Promise((resolve, reject) => {
-      this.loadGroups()
+      this.loadBoards()
         .then(result => resolve(result))
         .catch(() => reject(new Error("Couldn't retrieve your boards. Please refresh this page.")))
     });
   }
 
-  loadGroups() {
+  loadBoards() {
     return new Promise((resolve, reject) => {
       this.monday.api(`query {
         boards {
           id
           name
+        }}`)
+        .then(res => {
+          const boardsIds = res.data.boards
+            .filter(board => this.includeBoard(board))
+            .map(board => parseInt(board.id, 10));
+
+          this.loadGroups(boardsIds)
+            .then(result => resolve(result))
+            .catch(error => reject(error))
+        })
+        .catch(error => reject(error));
+    });
+  }
+
+  loadGroups(boardsIds) {
+    return new Promise((resolve, reject) => {
+      this.monday.api(`query($boardsIds: [Int]) {
+        boards(ids: $boardsIds) {
           groups {
             id
             title
             color
           }
         }
-      }`).then(res => {
-        const boards = res.data.boards.filter(board => this.includeBoard(board));
-        const boardsIds = boards.map(board => parseInt(board.id, 10));
-
+      }`, {variables: {boardsIds}}).then(res => {
         let groupsIds = [];
 
-        boards.forEach(board => {
+        res.data.boards.forEach(board => {
           groupsIds = groupsIds.concat(board.groups.map(group => group.id))
         });
 
@@ -57,9 +72,9 @@ class ItemsDao {
               }
           }
         }
-      }`, { variables: {groupsIds, boardsIds} })
-      .then(res => resolve(this.parseItems(res.data)))
-      .catch(error => reject(error))
+      }`, {variables: {groupsIds, boardsIds}})
+        .then(res => resolve(this.parseItems(res.data)))
+        .catch(error => reject(error))
     });
   }
 
