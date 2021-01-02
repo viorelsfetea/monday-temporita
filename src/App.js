@@ -39,7 +39,6 @@ class App extends React.Component {
     });
 
     this.monday.listen("context", res => {
-      console.log('App.js:42', res.data);
       this.setState({context: res.data});
     });
 
@@ -60,7 +59,7 @@ class App extends React.Component {
     return <BrowserRouter>
       <Route exact={true} path="/" component={(props) => <Today {...props} user={this.state.user} itemHandler={this.itemHandler} monday={this.monday} settings={this.state.settings} utils={this.utils} />} />
       <Route exact={true} path="/today" component={(props) => <Today {...props} user={this.state.user} itemHandler={this.itemHandler} monday={this.monday} settings={this.state.settings} utils={this.utils}/>} />
-      <Route exact={true} path="/planner" component={(props) => <Planner {...props} user={this.state.user} itemHandler={this.itemHandler} monday={this.monday} settings={this.state.settings} utils={this.utils} />} />
+      <Route exact={true} path="/planner" component={(props) => <Planner {...props} context={this.state.context} user={this.state.user} itemHandler={this.itemHandler} monday={this.monday} settings={this.state.settings} utils={this.utils} />} />
       <Route exact={true} path="/others" component={(props) => <Others {...props} user={this.state.user} itemHandler={this.itemHandler} monday={this.monday} settings={this.state.settings} utils={this.utils} usersDao={this.usersDao} />} />
       <Route exact={true} path="/reports" component={(props) => <Reports {...props} user={this.state.user} itemHandler={this.itemHandler} monday={this.monday} settings={this.state.settings} utils={this.utils} usersDao={this.usersDao} />} />
     </BrowserRouter>

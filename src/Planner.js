@@ -28,7 +28,7 @@ class Planner extends React.Component {
     this.monday = this.props.monday;
 
     this.utils = this.props.utils;
-    this.itemsDao = new ItemsDao(this.monday);
+    this.itemsDao = new ItemsDao(this.monday, this.props.context);
     this.itemHandler = this.props.itemHandler;
   }
 
@@ -55,11 +55,11 @@ class Planner extends React.Component {
 
       <div className="row">
           <div className="col-3 sidebar">
-            <BoardList 
+            <BoardList
               monday={this.monday}
               user={this.props.user}
               itemHandler={this.itemHandler}
-              boards={boards} 
+              boards={boards}
               draggable={true}
               key={boardsKey}
               onItemClick={this.itemHandler.openItem}
@@ -68,7 +68,7 @@ class Planner extends React.Component {
           </div>
 
           <div className="col-9 pt-4">
-            <TemporitaCalendar 
+            <TemporitaCalendar
               currentUser={this.props.user}
               monday={this.monday}
               utils={this.utils}

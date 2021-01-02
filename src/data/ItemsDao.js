@@ -1,6 +1,7 @@
 class ItemsDao {
-  constructor(monday) {
+  constructor(monday, context) {
     this.monday = monday;
+    this.context = context;
   }
 
   getItems() {
@@ -83,7 +84,7 @@ class ItemsDao {
   }
 
   includeBoard(board) {
-    return board.name.indexOf("Subitems") === -1;
+    return board.name.indexOf("Subitems") === -1 && board.id === this.context.boardId;
   }
 }
 
