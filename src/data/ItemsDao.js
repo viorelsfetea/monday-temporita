@@ -84,8 +84,7 @@ class ItemsDao {
   }
 
   includeBoard(board) {
-    console.log('ItemsDao.js:87', board, board.id, this.context, this.context.boardsId);
-    return board.name.indexOf("Subitems") === -1 && board.id === this.context.boardId;
+    return board.name.indexOf("Subitems") === -1 && parseInt(board.id) === this.context.boardId;
   }
 }
 
