@@ -14,11 +14,11 @@ class ItemsDao {
 
   loadBoards() {
     return new Promise((resolve, reject) => {
-      this.monday.api(`query {
-        boards {
+      this.monday.api(`query($boardsIds: [Int]) {
+        boards(ids: $boardsIds) {
           id
           name
-        }}`)
+        }}`, {variables: {boardsIds: [this.context.boardId]}})
         .then(res => {
           const boardsIds = res.data.boards
             .filter(board => this.includeBoard(board))
@@ -28,7 +28,10 @@ class ItemsDao {
             .then(result => resolve(result))
             .catch(error => reject(error))
         })
-        .catch(error => reject(error));
+        .catch(error => {
+          console.error("Temporita", "GraphQL", "Failed retrieving boards");
+          reject(error);
+        });
     });
   }
 
@@ -51,7 +54,10 @@ class ItemsDao {
 
         this.loadItems(boardsIds, groupsIds)
           .then(items => resolve(items))
-          .catch(error => reject(error));
+          .catch(error => {
+            console.error("Temporita", "GraphQL", "Failed retrieving groups");
+            reject(error);
+          });
       });
     });
   }
@@ -75,7 +81,10 @@ class ItemsDao {
         }
       }`, {variables: {groupsIds, boardsIds}})
         .then(res => resolve(this.parseItems(res.data)))
-        .catch(error => reject(error))
+        .catch(error => {
+          console.error("Temporita", "GraphQL", "Failed retrieving items");
+          reject(error);
+        })
     });
   }
 
@@ -84,7 +93,7 @@ class ItemsDao {
   }
 
   includeBoard(board) {
-    return board.name.indexOf("Subitems") === -1 && parseInt(board.id) === this.context.boardId;
+    return board.name.indexOf("Subitems") === -1;
   }
 }
 
