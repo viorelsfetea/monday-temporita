@@ -39,6 +39,7 @@ class App extends React.Component {
     });
 
     this.monday.listen("context", res => {
+      console.log('App.js:42', res.data);
       this.setState({context: res.data});
     });
 
